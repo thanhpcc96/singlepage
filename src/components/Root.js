@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+import { Header } from "./header";
+import { Footer } from "./footer";
+import {
+  TongQuan,
+  QuanLyNhanVien,
+  Quanlykhachhang,
+  Lichsugiaodich
+} from "./content";
 const Root = () => (
   <div>
-    <h1> App root</h1>
-    <Link to="/login">Login</Link>
+    <Header />
+    <Lichsugiaodich />
+    <Footer />
   </div>
 );
 export default Root;
