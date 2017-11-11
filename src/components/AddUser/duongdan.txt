@@ -1,0 +1,10 @@
+/dashboard
+/manager/admin
+/manager/admin/add
+/manager/user
+/manager/user/add
+/manager/client
+/manager/chuyenxe
+/manager/tuyen
+/manager/ticket
+/manager/coach
