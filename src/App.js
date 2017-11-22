@@ -17,7 +17,8 @@ import {
   QuanLyChuyenXe,
   Quanlytuyen,
   Quanlyve,
-  Quanlyxe
+  Quanlyxe,
+  Report
 } from "./components";
 import UserRoute from "./routers/UserRoute";
 const App = ({ location, isLogin }) => (
@@ -93,6 +94,7 @@ const App = ({ location, isLogin }) => (
       exact
       component={Quanlyxe}
     />
+    <UserRoute location={location} path="/report" exact component={Report} />
   </div>
 );
 App.propTypes = {

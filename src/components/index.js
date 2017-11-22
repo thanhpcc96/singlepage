@@ -13,6 +13,7 @@ import { QuanLyChuyenXe } from "./Quanlychuyenxe";
 import { Quanlytuyen } from "./Quanlytuyenxe";
 import { Quanlyve } from "./Quanlyve";
 import { Quanlyxe } from "./Quanlyxe";
+import { Report } from "./Reporting";
 
 export {
   HomePage,
@@ -30,5 +31,6 @@ export {
   QuanLyChuyenXe,
   Quanlytuyen,
   Quanlyve,
-  Quanlyxe
+  Quanlyxe,
+  Report
 };

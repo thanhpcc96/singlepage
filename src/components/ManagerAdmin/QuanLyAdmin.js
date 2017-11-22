@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 class Admin extends Component {
@@ -95,19 +96,21 @@ class Admin extends Component {
         <div className="wraper container-fluid">
           <div className="page-title">
             <h3 className="title">
-              Quản lý<span style={{ color: "red", fontSize: 15 }}>
+              Quản lý Admin{" "}
+              <span style={{ color: "red", fontSize: 15 }}>
                 <span />
               </span>
             </h3>
             <span className="tp_rht">
-              <a
+              <Link
+                to="/manager/admin/add"
                 data-toggle="tooltip"
                 title
                 className="btn btn-primary add_btn"
                 data-original-title="Add A Admin"
               >
                 <i className="fa fa-plus" />
-              </a>
+              </Link>
             </span>
           </div>
           <div className="row">

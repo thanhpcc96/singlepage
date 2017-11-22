@@ -290,10 +290,12 @@ aside.left-panel.lg + .content {
   font-weight: 600;
   font-family: "Proxima Nova Rg" !important;
   padding-left: 15px;
+  margin-left: 15px;
 }
 
 .logo-expanded span {
   vertical-align: middle;
+  margin-left: 25px;
 }
 
 /******** 2.2 Navigation *******/

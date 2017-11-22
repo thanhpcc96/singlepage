@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-class Admin extends Component {
+class ThemAdmin extends Component {
   render() {
     return (
       <section className="content">
@@ -7,14 +7,15 @@ class Admin extends Component {
           <div className="page-title">
             <h3 className="title">Thêm tài khoản quản trị</h3>
             <span className="tp_rht">
-              <a
+              <button
+                onClick={() => this.props.history.goBack()}
                 data-toggle="tooltip"
                 title
                 className="btn btn-default"
                 data-original-title="Back"
               >
                 <i className="fa fa-reply" />
-              </a>
+              </button>
             </span>
           </div>
           <div className="row">
@@ -155,4 +156,4 @@ class Admin extends Component {
     );
   }
 }
-export default Admin;
+export default ThemAdmin;
