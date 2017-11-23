@@ -1,20 +1,24 @@
 import React, { Component } from "react";
 class ThemNV extends Component {
   render() {
+    console.log("============================================");
+    console.log(this.props);
+    console.log("============================================");
     return (
       <section className="content">
         <div className="wraper container-fluid">
           <div className="page-title">
             <h3 className="title">Thêm nhân viên</h3>
             <span className="tp_rht">
-              <a
+              <button
+                onClick={() => this.props.history.goBack()}
                 data-toggle="tooltip"
                 title
                 className="btn btn-default"
                 data-original-title="Back"
               >
                 <i className="fa fa-reply" />
-              </a>
+              </button>
             </span>
           </div>{" "}
           {/*end pagetitle */}
@@ -23,12 +27,7 @@ class ThemNV extends Component {
               <div className="panel panel-default">
                 <div className="panel-body">
                   <div className=" form">
-                    <form
-                      className="cmxform form-horizontal tasi-form"
-                      method="post"
-                      encType="multipart/form-data"
-                      onsubmit="return validatelogin()"
-                    >
+                    <form className="cmxform form-horizontal tasi-form">
                       <div className="form-group ">
                         <label
                           htmlFor="lastname"

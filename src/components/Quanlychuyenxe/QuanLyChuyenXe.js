@@ -12,16 +12,6 @@ class Quanlychuyenxe extends Component {
                 <span />
               </span>
             </h3>
-            <span className="tp_rht">
-              <a
-                data-toggle="tooltip"
-                title
-                className="btn btn-primary add_btn"
-                data-original-title="Add A Admin"
-              >
-                <i className="fa fa-plus" />
-              </a>
-            </span>
           </div>
           <div className="row">
             <div className="col-md-12">

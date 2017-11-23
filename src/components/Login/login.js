@@ -20,7 +20,8 @@ class Login extends Component {
       password: "",
       isVisible: false,
       errorMesage: "",
-      error: false
+      error: false,
+      isShowForgot: false
     };
     this._setEmailValue = this._setEmailValue.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -61,9 +62,9 @@ class Login extends Component {
     }
     event.preventDefault();
   }
-  componentWillReceiveProps(nextProps){
-    if(nextProps.error){
-      this.props.history.push('dashboard');
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error) {
+      this.props.history.push("dashboard");
       // this.setState({
       //   error: true,
       //   errorMesage: 'Dang nhap that bai'
@@ -71,16 +72,14 @@ class Login extends Component {
     }
   }
   render() {
-    console.log('====================================');
+    console.log("====================================");
     console.log(this.props);
-    console.log('====================================');
+    console.log("====================================");
     return (
       <div>
         <section className="container-fluid main_header">
           <div className="lft">
-            <a className >
-              Trang chủ
-            </a>
+            <Link to="/">Trang chủ</Link>
           </div>
         </section>
         <div className="loginmain">
@@ -88,59 +87,104 @@ class Login extends Component {
             <li
               className="tab-link col-md-4 col-sm-4- col-xs-4 current"
               data-tab="tab-1"
-              
             >
               Tài Khoản quản lý
             </li>
             <div className="clear" />
           </ul>
           <div id="tab-1" className="tab-content current">
-            <form
-              className="form-horizontal m-t-20"
-              onSubmit={this._handleSubmit}
-            >
-              <div className="form-group ">
-                <div className="col-xs-12">
-                  <input
-                    className="form-control form-control-solid placeholder-no-fix"
-                    type="text"
-                    placeholder="Email"
-                    onChange={event => this._setEmailValue(event.target.value)}
-                  />
+            {this.state.isShowForgot === false ? (
+              <form
+                className="form-horizontal m-t-20"
+                onSubmit={this._handleSubmit}
+              >
+                <div className="form-group ">
+                  <div className="col-xs-12">
+                    <input
+                      className="form-control form-control-solid placeholder-no-fix"
+                      type="text"
+                      placeholder="Email"
+                      onChange={event =>
+                        this._setEmailValue(event.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="form-group ">
-                <div className="col-xs-12">
-                  <input
-                    className="form-control form-control-solid placeholder-no-fix"
-                    type="password"
-                    placeholder="Password"
-                    onChange={event =>
-                      this._setPasswordValue(event.target.value)}
-                  />
+                <div className="form-group ">
+                  <div className="col-xs-12">
+                    <input
+                      className="form-control form-control-solid placeholder-no-fix"
+                      type="password"
+                      placeholder="Password"
+                      onChange={event =>
+                        this._setPasswordValue(event.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="form-group text-right">
-                <div className="col-xs-12">
-                  {this.state.error && (
-                    <label
-                      className="label label-danger"
-                      style={{ marginRight: 20, padding: 5 }}
+                <div className="form-group text-right">
+                  <div className="col-xs-12">
+                    {this.state.error && (
+                      <label
+                        className="label label-danger"
+                        style={{ marginRight: 20, padding: 5 }}
+                      >
+                        {this.state.errorMesage}
+                      </label>
+                    )}
+                    <button
+                      className="login"
+                      type="submit"
+                      disabled={!this.state.isVisible}
                     >
-                      {this.state.errorMesage}
-                    </label>
-                  )}
-
-                  <button
-                    className="login"
-                    type="submit"
-                    disabled={!this.state.isVisible}
-                  >
-                    Đăng nhập
-                  </button>
+                      Đăng nhập
+                    </button>
+                    &nbsp;
+                    <button
+                      className="login"
+                      onClick={() =>
+                        this.setState({
+                          isShowForgot: true
+                        })}
+                    >
+                      Quên mật khẩu
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            ) : (
+              <form
+                className="form-horizontal m-t-20"
+                onSubmit={this._SubmitForgot}
+              >
+                <div className="form-group ">
+                  <div className="col-xs-12">
+                    <input
+                      className="form-control form-control-solid placeholder-no-fix"
+                      type="text"
+                      placeholder="Email"
+                      onChange={event =>
+                        this._setEmailValue(event.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group text-right">
+                  <div className="col-xs-12">
+                    <button
+                      className="login"
+                      onClick={() =>
+                        this.setState({
+                          isShowForgot: false
+                        })}
+                    >
+                      Đăng nhập
+                    </button>&nbsp;
+                    <button className="login" type="submit">
+                      Khôi phục mật khẩu
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
           </div>
         </div>
         {/* end login*/}
@@ -148,8 +192,11 @@ class Login extends Component {
     );
   }
 }
-export default connect(state=>({
-  error: state.user.error,
-}), {
-  postLoginAction
-})(Login);
+export default connect(
+  state => ({
+    error: state.user.error
+  }),
+  {
+    postLoginAction
+  }
+)(Login);
