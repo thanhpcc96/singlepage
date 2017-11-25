@@ -1,9 +1,10 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button, Image } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
+import ChitietNhanVienModal from "./ChiTietNhanVien";
 import { getListUserAction } from "./action";
 
 let countRow = 0;
@@ -93,9 +94,12 @@ class QuanLyNhanVien extends Component {
                 <i className="fa fa-plus" />
               </Link>
             */}
-              <button onClick={() => this.setState({ lgShow: true })}>
-                TESTSSSS
-              </button>
+              <Button bsStyle="info" onClick={() => this.setState({ lgShow: true })}>
+                Chi tiết
+              </Button> &nbsp;
+              <Button bsStyle="warning" onClick={() => this.setState({ lgShow: true })}>
+                +
+              </Button>
             </span>
           </div>
           {/* end page-title */}
@@ -163,7 +167,7 @@ class QuanLyNhanVien extends Component {
                                   Chuc vu
                                 </TableHeaderColumn>
                               </BootstrapTable>
-                              <MyLargeModal
+                              <ChitietNhanVienModal
                                 show={this.state.lgShow}
                                 onHide={lgClose}
                               />
@@ -198,71 +202,3 @@ export default connect(
     getListUserAction
   }
 )(QuanLyNhanVien);
-class MyLargeModal extends Component {
-  render() {
-    return (
-      <Modal
-        {...this.props}
-        bsSize="large"
-        aria-labelledby="contained-modal-title-lg"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-lg">
-            <h4>Thông tin chi tiết</h4>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h4>Wrapped Text</h4>
-          <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-            ac consectetur ac, vestibulum at eros.
-          </p>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-            auctor.
-          </p>
-          <p>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-            cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-            dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </p>
-          <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-            ac consectetur ac, vestibulum at eros.
-          </p>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-            auctor.
-          </p>
-          <p>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-            cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-            dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </p>
-          <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-            ac consectetur ac, vestibulum at eros.
-          </p>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-            auctor.
-          </p>
-          <p>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-            cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-            dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.props.onHide}>Close</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}

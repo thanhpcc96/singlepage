@@ -2334,3 +2334,6 @@ ul.navi_tabs {
   margin-left: 5px;
   margin-top: 20px;
 }
+.panel {
+  padding: 0px;
+}

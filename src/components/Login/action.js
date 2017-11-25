@@ -60,6 +60,7 @@ export function postForgotAction(email) {
 export function logOut() {
   return dispatch => {
     localStorage.removeItem("HaiAuToken");
+    localStorage.removeItem("state");
     setAuthHeader();
     dispatch({
       type: USER_LOGED_OUT

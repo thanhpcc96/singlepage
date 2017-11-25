@@ -12,6 +12,7 @@ import { logedIn } from "./components/Login/action";
 import { setAuthHeader } from "./API/api";
 import App from "./App";
 import store from "./redux/store";
+import { saveState } from "./redux/loadStateLocal";
 
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/bootstrap.min.css";
@@ -36,19 +37,17 @@ import "./assets/css/helper.css";
 // console.log('====================================');
 // console.log(user);
 // console.log('====================================');
-//   setAuthHeader(localStorage.HaiAuToken);
+setAuthHeader(localStorage.HaiAuToken);
 //   store.dispatch(logedIn());
 // }
 
-import { persistStore } from "redux-persist";
+//import { persistStore } from "redux-persist";
 
-persistStore(
-  store,
-  {
-    storage: localStorage,
-    whitelist: ["user"]
-  }
-);
+store.subscribe(() => {
+  saveState({
+    user: store.getState().user
+  });
+});
 
 ReactDOM.render(
   <BrowserRouter>

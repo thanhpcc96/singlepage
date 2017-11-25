@@ -2,7 +2,8 @@ import { createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise-middleware";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
-import { autoRehydrate } from "redux-persist";
+// import { autoRehydrate } from "redux-persist";
+import { loadState } from "./loadStateLocal";
 
 import reducers from "./reducers";
 
@@ -14,6 +15,6 @@ if (process.env.NODE_ENV === "development") {
 
 export default createStore(
   reducers,
-  undefined,
-  compose(applyMiddleware(...middlewares), autoRehydrate())
+  loadState(),
+  compose(applyMiddleware(...middlewares))
 );
