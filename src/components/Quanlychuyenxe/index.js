@@ -1,2 +1,3 @@
 import QuanLyChuyenXe from "./QuanLyChuyenXe";
-export { QuanLyChuyenXe };
+import QuanLyChuyenXeReducer from "./reducer";
+export { QuanLyChuyenXe, QuanLyChuyenXeReducer };

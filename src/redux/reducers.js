@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
-import { LoginReducer } from "../components";
+import { LoginReducer, QuanLyChuyenXeReducer } from "../components";
 
 export default combineReducers({
-  user: LoginReducer
+  user: LoginReducer,
+  managerchuyen: QuanLyChuyenXeReducer
 });

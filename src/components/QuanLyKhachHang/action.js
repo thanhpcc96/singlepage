@@ -1,0 +1,1 @@
+export const GET_LIST_KHACHHANG = "GET_LIST_KHACHHANG";

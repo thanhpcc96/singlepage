@@ -26,6 +26,9 @@ const MenuLink = ({ label, to, acticeOnlyWhenExacr, icon }) => {
 class Header extends Component {
   handleLogout() {
     this.props.logOut();
+    console.log("============================================");
+    console.log("==========                ===========", this.props);
+    console.log("============================================");
   }
 
   render() {
@@ -218,7 +221,7 @@ class Header extends Component {
                   aria-expanded="false"
                 >
                   <img
-                    alt
+                    alt=""
                     className="img-circle"
                     src={process.env.PUBLIC_URL + "/assets/img/user.png"}
                   />
@@ -233,21 +236,21 @@ class Header extends Component {
                   aria-labelledby="dropdownMenuLink"
                 >
                   <li>
-                    <a>
+                    <Link to="./ChitietAdmin">
                       <i className="fa fa-user" aria-hidden="true" /> Thông tin
                       tài khoản
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a>
+                    <Link to="/changepass">
                       <i className="fa fa-key" aria-hidden="true" /> Thay đổi
                       mật khẩu
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a onClick={() => this.handleLogout()}>
+                    <button onClick={() => this.handleLogout()}>
                       <i className="fa fa-sign-out" /> Đăng xuất
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </div>

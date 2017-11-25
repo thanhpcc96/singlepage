@@ -18,9 +18,11 @@ import {
   Quanlytuyen,
   Quanlyve,
   Quanlyxe,
-  Report
+  Report,
+  ChitietAdmin
 } from "./components";
 import UserRoute from "./routers/UserRoute";
+import { Thaydoimatkhau } from "./components/Thaydoimatkhau/index";
 const App = ({ location, isLogin }) => (
   <div>
     <Route path="/" exact component={HomePage} exact location={location} />
@@ -95,6 +97,18 @@ const App = ({ location, isLogin }) => (
       component={Quanlyxe}
     />
     <UserRoute location={location} path="/report" exact component={Report} />
+    <UserRoute
+      location={location}
+      path="/changepass"
+      exact
+      component={Thaydoimatkhau}
+    />
+    <UserRoute
+      location={location}
+      path="/ChitietAdmin"
+      exact
+      component={ChitietAdmin}
+    />
   </div>
 );
 App.propTypes = {

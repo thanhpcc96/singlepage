@@ -9,11 +9,13 @@ import { Profile } from "./Profile";
 import { Quanlykhachhang } from "./QuanLyKhachHang";
 import { QuanLyNhanVien } from "./QuanLyNhanVien";
 import { TongQuan } from "./TongQuan";
-import { QuanLyChuyenXe } from "./Quanlychuyenxe";
+import { QuanLyChuyenXe, QuanLyChuyenXeReducer } from "./Quanlychuyenxe";
 import { Quanlytuyen } from "./Quanlytuyenxe";
 import { Quanlyve } from "./Quanlyve";
 import { Quanlyxe } from "./Quanlyxe";
 import { Report } from "./Reporting";
+import { Thaydoimatkhau } from "./Thaydoimatkhau";
+import { ChitietAdmin } from "./ChitietAdmin";
 
 export {
   HomePage,
@@ -29,8 +31,11 @@ export {
   QuanLyNhanVien,
   TongQuan,
   QuanLyChuyenXe,
+  QuanLyChuyenXeReducer,
   Quanlytuyen,
   Quanlyve,
   Quanlyxe,
-  Report
+  Report,
+  Thaydoimatkhau,
+  ChitietAdmin
 };

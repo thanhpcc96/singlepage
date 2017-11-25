@@ -1,7 +1,14 @@
 import React, { Component } from "react";
+import { getListChuyenXeAction } from "./action";
+import { connect } from "react-redux";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
+
 class Quanlychuyenxe extends Component {
+  constructor(props) {
+    super(props);
+    this.props.getListChuyenXeAction();
+  }
   render() {
     return (
       <section className="content">
@@ -135,4 +142,11 @@ class Quanlychuyenxe extends Component {
     );
   }
 }
-export default Quanlychuyenxe;
+export default connect(
+  state => ({
+    managerChuyen: state.managerchuyen
+  }),
+  {
+    getListChuyenXeAction
+  }
+)(Quanlychuyenxe);

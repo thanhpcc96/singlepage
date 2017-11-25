@@ -2,7 +2,7 @@ import axios from "axios";
 
 let URL;
 if (process.env.NODE_ENV === "development") {
-  URL = "http://localhost:3000/api/v1/";
+  URL = "http://191.168.0.31:3000/api/v1/";
 } else {
   URL = "http://amazon";
 }
@@ -24,6 +24,14 @@ class userAPI {
     this.pathManagerCoach = "manager/coach";
     this.pathManagerChuyenxe = "manager/chuyenxe";
     this.pathManagerTuyenxe = "manager/tuyen";
+  }
+  async getListChuyenXe() {
+    try {
+      const respone = await axios.get(this.pathManagerChuyenxe + "/all");
+      return respone;
+    } catch (error) {
+      throw error;
+    }
   }
   async postLogin(args) {
     try {

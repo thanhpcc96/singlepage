@@ -2334,3 +2334,7 @@ ul.navi_tabs {
   margin-left: 5px;
   margin-top: 20px;
 }
+a {
+  color: #171818;
+  text-decoration: none;
+}
