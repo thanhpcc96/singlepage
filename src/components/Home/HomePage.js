@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+const logo = require("../../assets/img/haiaulogo.png");
+const banner = require("../../assets/img/banner_custom.jpg");
 class HomePage extends Component {
   render() {
     return (
@@ -12,22 +13,16 @@ class HomePage extends Component {
                 <div className="row">
                   <div className="col-md-3 col-sm-3 col-xs-3">
                     <strong className="logo">
-                      <img
-                        src={
-                          process.env.PUBLIC_URL + "/assets/img/haiaulogo.png"
-                        }
-                        width={143}
-                        height={50}
-                      />
+                      <img src={logo} width={143} height={50} />
                     </strong>
                   </div>
                   <div className="col-md-9 col-sm-9 col-xs-9">
                     <div className="topbar">
                       <ul className="top-listed">
                         <li className="hidden-xs" />
-                        <li className>
+                        <li>
                           <span className="top_bcmdri_btn">
-                            <Link to="/tracking">
+                            <Link to="/login">
                               <button>Login</button>
                             </Link>
                           </span>
@@ -41,12 +36,13 @@ class HomePage extends Component {
           </header>
           <section>
             <div className="top-banner">
-              <div className>
+              <div>
                 <div
                   className="banner"
                   style={{
-                    backgroundImage:
-                      `url(${process.env.PUBLIC_URL}/assets/img/banner_custom.jpg)`
+                    backgroundImage: `url(${
+                      process.env.PUBLIC_URL
+                    }/assets/img/banner_custom.jpg)`
                   }}
                 >
                   <center className="bnr_top">
@@ -98,7 +94,10 @@ class HomePage extends Component {
                         >
                           <div className="img-holder">
                             <img
-                              src={process.env.PUBLIC_URL+'/assets/img/xe khach.svg'}
+                              src={
+                                process.env.PUBLIC_URL +
+                                "/assets/img/xe khach.svg"
+                              }
                               className="ola-fleet-icon-active"
                             />
                           </div>
@@ -141,7 +140,13 @@ class HomePage extends Component {
                         >
                           <div className="ft-comm-content">
                             <div className="wd-60 left-content">
-                              <img src={process.env.PUBLIC_URL+'/assets/img/haiau.jpg'} className="position-1" />
+                              <img
+                                src={
+                                  process.env.PUBLIC_URL +
+                                  "/assets/img/haiau.jpg"
+                                }
+                                className="position-1"
+                              />
                             </div>
                             <div className="wd-40">
                               <div className="right-content">
@@ -366,12 +371,16 @@ class HomePage extends Component {
                 <ul>
                   <li>
                     <a className="btn btn-app-download">
-                      <i className="fa fa-apple" />AVAILABLE ON THE<strong>App Store</strong>
+                      <i className="fa fa-apple" />AVAILABLE ON THE<strong>
+                        App Store
+                      </strong>
                     </a>
                   </li>
                   <li>
                     <a className="btn btn-app-download">
-                      <i className="fa fa-play" />ANDROID APP ON<strong>Download App</strong>
+                      <i className="fa fa-play" />ANDROID APP ON<strong>
+                        Download App
+                      </strong>
                     </a>
                   </li>
                 </ul>

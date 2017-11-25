@@ -1,8 +1,11 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "redux-promise-middleware";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
+import { autoRehydrate } from "redux-persist";
+
 import reducers from "./reducers";
+
 const middlewares = [thunk, promiseMiddleware()];
 
 if (process.env.NODE_ENV === "development") {
@@ -12,5 +15,5 @@ if (process.env.NODE_ENV === "development") {
 export default createStore(
   reducers,
   undefined,
-  applyMiddleware(...middlewares)
+  compose(applyMiddleware(...middlewares), autoRehydrate())
 );

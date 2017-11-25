@@ -1,2 +1,3 @@
 import QuanLyNhanVien from "./Quanlynhanvien";
-export { QuanLyNhanVien };
+import QuanlyNhanVienReducer from './reducer';
+export { QuanLyNhanVien,QuanlyNhanVienReducer};

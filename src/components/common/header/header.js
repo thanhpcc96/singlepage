@@ -12,7 +12,7 @@ const MenuLink = ({ label, to, acticeOnlyWhenExacr, icon }) => {
         var active = match ? "active has-submenu" : "";
         return (
           <li className={active}>
-            <NavLink to={to} className="has-submenu">
+            <NavLink to={`${process.env.PUBLIC_URL}${to}`} className="has-submenu">
               <i className={icon} aria-hidden="true" />
               {label}
             </NavLink>
@@ -50,14 +50,6 @@ class Header extends Component {
                 acticeOnlyWhenExacr={true}
                 icon={"fa fa-home"}
               />
-
-              <MenuLink
-                label="Xem lộ trình"
-                to="/tracking"
-                acticeOnlyWhenExacr={true}
-                icon={"fa fa-map-marker"}
-              />
-
               <MenuLink
                 label="Quản lý Admin"
                 to="/manager/admin"
@@ -218,7 +210,7 @@ class Header extends Component {
                   aria-expanded="false"
                 >
                   <img
-                    alt
+                    
                     className="img-circle"
                     src={process.env.PUBLIC_URL + "/assets/img/user.png"}
                   />

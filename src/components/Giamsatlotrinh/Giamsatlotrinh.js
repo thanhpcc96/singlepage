@@ -15,7 +15,7 @@ class GiamSat extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = io(socketURL);
+    
 
     this.state = {
       markerCoordinates: [],

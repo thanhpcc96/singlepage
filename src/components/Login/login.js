@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { postLoginAction } from "./action";
+import { Link, Redirect } from "react-router-dom";
+import { postLoginAction, postForgotAction } from "./action";
 import { connect } from "react-redux";
 
 // @connect(
@@ -21,7 +21,9 @@ class Login extends Component {
       isVisible: false,
       errorMesage: "",
       error: false,
-      isShowForgot: false
+      isShowForgot: false,
+      emailForgot: "",
+      errorForgot: false
     };
     this._setEmailValue = this._setEmailValue.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -37,6 +39,11 @@ class Login extends Component {
     });
     this._checkVisiableButton();
   };
+  _setEmailForgotValue = value => {
+    this.setState({
+      emailForgot: value
+    });
+  };
   _setPasswordValue = value => {
     this.setState({
       password: value
@@ -44,7 +51,7 @@ class Login extends Component {
     this._checkVisiableButton();
   };
   _checkVisiableButton() {
-    if (this.state.email.length > 1 && this.state.password.length > 1) {
+    if (this.state.email.length > 1) {
       this.setState({
         isVisible: true
       });
@@ -62,19 +69,38 @@ class Login extends Component {
     }
     event.preventDefault();
   }
+  _SubmitForgot(event) {
+    if (this._validateEmail(this.state.emailForgot)) {
+      this.props.postForgotAction(this.state.emailForgot);
+    } else {
+      this.setState({
+        errorForgot: true,
+        errorMesage: "Email khong hop le"
+      });
+    }
+    event.preventDefault();
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.error) {
-      this.props.history.push("dashboard");
-      // this.setState({
-      //   error: true,
-      //   errorMesage: 'Dang nhap that bai'
-      // })
+      this.setState({
+        error: true,
+        errorMesage: "Dang nhap that bai"
+      });
+    }
+    if (nextProps.errorforgot) {
+      this.setState({
+        errorForgot: true,
+        errorMesage: "email khong ton tai!"
+      });
     }
   }
   render() {
     console.log("====================================");
     console.log(this.props);
     console.log("====================================");
+    if(this.props.user.isLogin===true){
+      return <Redirect to="/dashboard" />
+    }
     return (
       <div>
         <section className="container-fluid main_header">
@@ -105,7 +131,8 @@ class Login extends Component {
                       type="text"
                       placeholder="Email"
                       onChange={event =>
-                        this._setEmailValue(event.target.value)}
+                        this._setEmailValue(event.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -116,7 +143,8 @@ class Login extends Component {
                       type="password"
                       placeholder="Password"
                       onChange={event =>
-                        this._setPasswordValue(event.target.value)}
+                        this._setPasswordValue(event.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -143,7 +171,8 @@ class Login extends Component {
                       onClick={() =>
                         this.setState({
                           isShowForgot: true
-                        })}
+                        })
+                      }
                     >
                       Quên mật khẩu
                     </button>
@@ -162,8 +191,19 @@ class Login extends Component {
                       type="text"
                       placeholder="Email"
                       onChange={event =>
-                        this._setEmailValue(event.target.value)}
+                        this._setEmailForgotValue(event.target.value)
+                      }
                     />
+                    {this.state.errorForgot === true ? (
+                      <div className="col-xs-12">
+                        <label
+                          className="label label-danger"
+                          style={{ marginRight: 20, padding: 5 }}
+                        >
+                          {this.state.errorMesage}
+                        </label>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 
@@ -174,7 +214,8 @@ class Login extends Component {
                       onClick={() =>
                         this.setState({
                           isShowForgot: false
-                        })}
+                        })
+                      }
                     >
                       Đăng nhập
                     </button>&nbsp;
@@ -194,9 +235,11 @@ class Login extends Component {
 }
 export default connect(
   state => ({
-    error: state.user.error
+    error: state.user.error,
+    user: state.user
   }),
   {
-    postLoginAction
+    postLoginAction,
+    postForgotAction
   }
 )(Login);

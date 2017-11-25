@@ -105,7 +105,6 @@ class Admin extends Component {
               <Link
                 to="/manager/admin/add"
                 data-toggle="tooltip"
-                title
                 className="btn btn-primary add_btn"
                 data-original-title="Add A Admin"
               >

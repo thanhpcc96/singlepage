@@ -1,7 +1,71 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-class QuanLy extends Component {
+import { connect } from "react-redux";
+
+import { getListKhachHang } from "./action";
+
+let countRow = 0;
+
+class QuanLyKhachHang extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null,
+      idSelect: null
+    };
+    this.props.getListKhachHang();
+  }
+  onRowSelect(row, isSelected, e) {
+    this.setState({
+      idSelect: null
+    });
+    countRow++;
+    if (isSelected === true && countRow === 1) {
+      this.setState({
+        idSelect: row._id
+      });
+    }
+    if (isSelected && countRow > 1) {
+      alert("Chưa hỗ trợ chọn nhiều hàng!");
+      return false;
+    }
+    if (isSelected === false) {
+      countRow = 0;
+    }
+  }
+
+  _mapingData(data) {
+    const loc = [];
+    data.forEach(khachhang => {
+      const client = {
+        _id: khachhang._id,
+        phone: khachhang.phone,
+        status: khachhang.status,
+        email: khachhang.local.email,
+        photo: khachhang.local.photo,
+        fullname: khachhang.info.fullname,
+        balance: khachhang.acount_payment.balance
+      };
+      loc.push(client);
+    });
+    this.setState({
+      data: loc
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.managerclient.listkhachhang !== null) {
+      this._mapingData(nextProps.managerclient.listkhachhang);
+    }
+  }
   render() {
+    const selectRowProp = {
+      mode: "checkbox",
+      bgColor: "#4DD0E1", // you should give a bgcolor, otherwise, you can't regonize which row has been selected
+      hideSelectColumn: true, // enable hide selection column.
+      clickToSelect: true, // you should enable clickToSelect, otherwise, you can't select column.
+      onSelect: this.onRowSelect.bind(this)
+    };
     return (
       <section className="content">
         <div className="wraper container-fluid">
@@ -28,134 +92,50 @@ class QuanLy extends Component {
                           id="datatable_wrapper"
                           className="dataTables_wrapper form-inline dt-bootstrap no-footer"
                         >
-                          <div className="row">
-                            {/* start row */}
-                          </div>
+                          <div className="row">{/* start row */}</div>
                           {/* end row */}
                           <div className="row">
                             {/* start row */}
                             <div className="col-sm-12" />
                             <BootstrapTable
                               pagination
+                              data={this.state.data}
                               search={true}
                               multiColumnSearch={true}
+                              options={{
+                                noDataText: "Khong co du lieu khach hang",
+                                exportCSVText: "Trích xuất ra excel",
+                                csvFileName: "Danhsachnhanvien.csv"
+                              }}
+                              striped
+                              hover
+                              condensed
+                              exportCSV
+                              selectRow={selectRowProp}
                             >
                               <TableHeaderColumn dataField="_id" isKey hidden>
                                 {" "}
-                                Tên lộ trình
+                                id
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Điểm xuất phát
+                              <TableHeaderColumn dataField="fullname">
+                                Họ tên
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Điểm dừng
+                              <TableHeaderColumn dataField="email">
+                                Email
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Lộ trình
+                              <TableHeaderColumn dataField="phone">
+                                Số điện thoại
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Thời gian di chuyển
+                              <TableHeaderColumn dataField="balance">
+                                Số dư
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Tên trạm kiểm tra
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Vị trí trạm
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Xe phân công trong tuyến
+                              <TableHeaderColumn dataField="status">
+                                Trạng thái
                               </TableHeaderColumn>
                             </BootstrapTable>
                           </div>
                           {/* end row */}
-                          <div className="row">
-                            {/* start row */}
-                            <div className="col-sm-6">
-                              <div
-                                className="dataTables_info"
-                                id="datatable_info"
-                                role="status"
-                                aria-live="polite"
-                              >
-                                Hiển thị 1 đến 25 trong 602 khách hàng
-                              </div>
-                            </div>
-                            <div className="col-sm-6">
-                              <div
-                                className="dataTables_paginate paging_simple_numbers"
-                                id="datatable_paginate"
-                              >
-                                <ul className="pagination">
-                                  <li
-                                    className="paginate_button previous disabled"
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                    id="datatable_previous"
-                                  >
-                                    <a>Trang trước</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button active"
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                  >
-                                    <a>1</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button "
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                  >
-                                    <a>2</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button "
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                  >
-                                    <a>3</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button "
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                  >
-                                    <a>4</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button "
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                  >
-                                    <a>5</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button disabled"
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                    id="datatable_ellipsis"
-                                  >
-                                    <a>…</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button "
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                  >
-                                    <a>25</a>
-                                  </li>
-                                  <li
-                                    className="paginate_button next"
-                                    aria-controls="datatable"
-                                    tabIndex={0}
-                                    id="datatable_next"
-                                  >
-                                    <a>Trang sau</a>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
+
                           {/* end row */}
                         </div>
                       </div>
@@ -174,4 +154,11 @@ class QuanLy extends Component {
     );
   }
 }
-export default QuanLy;
+export default connect(
+  state => ({
+    managerclient: state.managerclient
+  }),
+  {
+    getListKhachHang
+  }
+)(QuanLyKhachHang);

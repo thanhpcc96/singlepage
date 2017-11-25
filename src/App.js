@@ -6,7 +6,6 @@ import {
   HomePage,
   ThemAdmin,
   ThemNV,
-  GiamSat,
   Lichsugiaodich,
   Login,
   QuanLyAdmin,
@@ -21,80 +20,80 @@ import {
   Report
 } from "./components";
 import UserRoute from "./routers/UserRoute";
+const baseURL= process.env.PUBLIC_URL;
 const App = ({ location, isLogin }) => (
   <div>
-    <Route path="/" exact component={HomePage} exact location={location} />
-    <Route path="/login" exact component={Login} exact location={location} />
+    <Route path={`${baseURL}/`} exact component={HomePage} exact location={location} />
+    <Route path={baseURL+"/login"} exact component={Login} exact location={location} />
 
     <UserRoute
       location={location}
-      path="/dashboard"
+      path={baseURL+"/dashboard"}
       exact
       component={TongQuan}
     />
     <UserRoute
       location={location}
-      path="/manager/admin"
+      path={baseURL+"/manager/admin"}
       exact
       component={QuanLyAdmin}
     />
     <UserRoute
       location={location}
-      path="/manager/admin/add"
+      path={baseURL+"/manager/admin/add"}
       exact
       component={ThemAdmin}
     />
-    <UserRoute location={location} path="/tracking" exact component={GiamSat} />
     <UserRoute
       location={location}
-      path="/manager/user"
+      path={baseURL+"/manager/user"}
       exact
       component={QuanLyNhanVien}
     />
     <UserRoute
       location={location}
-      path="/manager/user/add"
+      path={baseURL+"/manager/user/add"}
       exact
       component={ThemNV}
     />
     <UserRoute
       location={location}
-      path="/manager/client"
+      path={baseURL+"/manager/client"}
       exact
       component={Quanlykhachhang}
     />
     <UserRoute
       location={location}
-      path="/manager/transaction"
+      path={baseURL+"/manager/transaction"}
       exact
       component={Lichsugiaodich}
     />
     <UserRoute location={location} path="/profile" exact component={Profile} />
     <UserRoute
       location={location}
-      path="/manager/chuyenxe"
+      path={baseURL+"/manager/chuyenxe"}
       exact
       component={QuanLyChuyenXe}
     />
     <UserRoute
       location={location}
-      path="/manager/tuyen"
+      path={baseURL+"/manager/tuyen"}
       exact
       component={Quanlytuyen}
     />
     <UserRoute
       location={location}
-      path="/manager/ticket"
+      path={baseURL+"/manager/ticket"}
       exact
       component={Quanlyve}
     />
     <UserRoute
       location={location}
-      path="/manager/coach"
+      path={baseURL+"/manager/coach"}
       exact
       component={Quanlyxe}
     />
-    <UserRoute location={location} path="/report" exact component={Report} />
+    <UserRoute location={location} path={baseURL+"/report"} exact component={Report} />
   </div>
 );
 App.propTypes = {

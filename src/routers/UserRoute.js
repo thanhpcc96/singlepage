@@ -10,7 +10,7 @@ const UserRoute = ({ isLogin, component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      isLogin ? (
+      isLogin===true ? (
         <div>
           <Header />
           <Component {...props} />
@@ -27,5 +27,5 @@ UserRoute.propTypes = {
 };
 
 export default connect(state => ({
-  isLogin: !state.user.isLogin
+  isLogin: state.user.isLogin
 }))(UserRoute);

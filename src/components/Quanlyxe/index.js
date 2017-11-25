@@ -1,2 +1,3 @@
 import Quanlyxe from "./Quanlyxe";
-export { Quanlyxe };
+import QuanlyxeReducer from "./reducer";
+export { Quanlyxe, QuanlyxeReducer };

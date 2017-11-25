@@ -1,2 +1,3 @@
 import Quanlykhachhang from "./Quanlykhachhang";
-export { Quanlykhachhang };
+import QuanlykhachhangReducer from "./reducer";
+export { Quanlykhachhang, QuanlykhachhangReducer };
