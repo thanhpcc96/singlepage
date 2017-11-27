@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import Datepicker from "react-datepicker";
 import { Link } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
@@ -17,45 +18,100 @@ import {
   Table,
   FormControl
 } from "react-bootstrap";
+import { getDetailUserAction, postUploadUserAction } from "./action";
 class ChiTietUserModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isBtnUpdateDisable: true,
       file: "",
-      imagePreviewUrl: ""
+      imagePreviewUrl: "",
+      haveFile: false,
+      isUploading: false
     };
   }
 
   onImageDrop(files) {
-    this.setState({
-      uploadedFile: files[0]
-    });
-    let reader = new FileReader();
     let file = files[0];
-    reader.readAsDataURL(file);
+    console.log('====================================');
+    console.log(file);
+    console.log('====================================');
+    this.setState({
+      file: file,
+      //imagePreviewUrl: reader.result,
+      isUploading: true
+    });
+    let formdata = new FormData();
+    formdata.append("profile", this.state.file);
+    formdata.append("id", this.props.data._id);
 
-    reader.onloadend = () => {
-      this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
-      });
-    };
-
-    //this.handleImageUpload(files[0]);
+    this.props.postupload(formdata);
   }
 
+  _handleNoData() {
+    if (this.props.data === null) {
+      alert("Khong co du lieu de xem thong tin chi tiet");
+      this.props.onHide;
+      return;
+    }
+    if (this.props.data !== undefined) {
+      this.setState({
+        imagePreviewUrl: this.props.data.photo
+      });
+    } else {
+      this.setState({
+        imagePreviewUrl: ""
+      });
+    }
+    //this.props.getDetailUserAction(this.props.data._id);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.manageruser.uploaddata !== null) {
+      let reader = new FileReader();
+      reader.readAsDataURL(this.state.file);
+      reader.onloadend = () => {
+        this.setState({
+          isUploading: false,
+          imagePreviewUrl: reader.result
+        });
+      };
+    }
+    if (nextProps.manageruser.uploaderror !== null) {
+      this.setState({
+        isUploading: false
+      });
+      alert("Upload that bai");
+    }
+  }
   render() {
+    console.log("===============data==modal===================");
+    console.log(this.props.data);
+    console.log("====================================");
+    // _id: user._id,
+    //     email: user.email,
+    //     username: user.username,
+    //     status: user.status,
+    //     role: user.role,
+    //     fullname: user.info.fullname,
+    //     passport: user.info.passportNumber,
+    //     address: user.info.address,
+    //     phone: user.info.phoneNumber,
+    //     gender: user.info.gender,
+    //     chucvu:
+    //       user.role === 2
+    //         ? "Lai xe"
+    //         : user.role === 3 ? "Phu xe" : "Kiem soat vien"
     return (
       <Modal
         {...this.props}
         bsSize="large"
         aria-labelledby="contained-modal-title-lg"
-        onHide={() => this.setState({ isBtnUpdateDisable: true })}
+        restoreFocus
+        onEnter={() => this._handleNoData()}
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-lg">
-            <h4>Thông tin chi tiết</h4>
+            Thông tin chi tiết
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -67,7 +123,8 @@ class ChiTietUserModal extends Component {
                   alt="135x180"
                   src={this.state.imagePreviewUrl}
                 />
-                {this.state.isBtnUpdateDisable === false ? (
+                {this.state.isBtnUpdateDisable === false &&
+                this.state.isUploading === false ? (
                   <div
                     style={{ justifyContent: "center", alignItems: "center" }}
                   >
@@ -76,15 +133,10 @@ class ChiTietUserModal extends Component {
                       multiple={false}
                       accept="image/*"
                       onDrop={this.onImageDrop.bind(this)}
+                      disablePreview={false}
                     >
                       <p>Kéo ảnh vào đây hoặc bấm vào đây để chọn ảnh</p>
                     </Dropzone>
-                    <Button
-                      bsStyle="danger"
-                      onClick={() => this.setState({ imagePreviewUrl: "" })}
-                    >
-                      Hủy
-                    </Button>
                   </div>
                 ) : (
                   undefined
@@ -105,13 +157,17 @@ class ChiTietUserModal extends Component {
                             <FormControl
                               disabled={this.state.isBtnUpdateDisable}
                               type="text"
-                              value={"Chieu"}
+                              value={
+                                this.props.data
+                                  ? this.props.data.fullname
+                                  : "Chua chon doi tuong hien thi"
+                              }
                             />
                           </FormGroup>
                         </td>
                       </tr>
                       <tr>
-                        <td>Ngày sinh</td>
+                        <td>Số chứng minh nhân dân</td>
                         <td>
                           <FormGroup
                             controlId="formValidationSuccess1"
@@ -121,12 +177,16 @@ class ChiTietUserModal extends Component {
                             <FormControl
                               disabled={this.state.isBtnUpdateDisable}
                               type="text"
-                              value={"25/26/1996"}
+                              value={
+                                this.props.data
+                                  ? this.props.data.passport
+                                  : "Chua chon doi tuong hien thi"
+                              }
                             />
                           </FormGroup>
                         </td>
                       </tr>
-                      <tr>
+                      {/*<tr>
                         <td>Giới tính</td>
                         <td>
                           <FormGroup controlId="formControlsSelect">
@@ -142,6 +202,7 @@ class ChiTietUserModal extends Component {
                           </FormGroup>
                         </td>
                       </tr>
+                      */}
                       <tr>
                         <td>Username</td>
                         <td>
@@ -152,9 +213,34 @@ class ChiTietUserModal extends Component {
                           >
                             <ControlLabel />
                             <FormControl
-                              disabled={this.state.isBtnUpdateDisable}
+                              disabled={true}
                               type="text"
-                              value={"ChieuBD"}
+                              value={
+                                this.props.data
+                                  ? this.props.data.username
+                                  : "Chua chon doi tuong hien thi"
+                              }
+                            />
+                          </FormGroup>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Số điện thoại</td>
+                        <td>
+                          {" "}
+                          <FormGroup
+                            controlId="formValidationSuccess1"
+                            validationState="null"
+                          >
+                            <ControlLabel />
+                            <FormControl
+                              disabled={true}
+                              type="text"
+                              value={
+                                this.props.data
+                                  ? this.props.data.phone
+                                  : "Chua chon doi tuong hien thi"
+                              }
                             />
                           </FormGroup>
                         </td>
@@ -170,7 +256,11 @@ class ChiTietUserModal extends Component {
                             <ControlLabel />
                             <FormControl
                               type="email"
-                              value={"Chieu@aaaa@gmail.com"}
+                              value={
+                                this.props.data
+                                  ? this.props.data.email
+                                  : "Chua chon doi tuong hien thi"
+                              }
                               disabled={this.state.isBtnUpdateDisable}
                             />
                           </FormGroup>
@@ -186,7 +276,11 @@ class ChiTietUserModal extends Component {
                             <ControlLabel />
                             <FormControl
                               type="text"
-                              value={"Sơn La"}
+                              value={
+                                this.props.data
+                                  ? this.props.data.address
+                                  : "Chua chon doi tuong hien thi"
+                              }
                               disabled={this.state.isBtnUpdateDisable}
                             />
                           </FormGroup>
@@ -203,7 +297,11 @@ class ChiTietUserModal extends Component {
                             <ControlLabel />
                             <FormControl
                               type="text"
-                              value={"Lai xe "}
+                              value={
+                                this.props.data
+                                  ? this.props.data.chucvu
+                                  : "Chua chon doi tuong hien thi"
+                              }
                               disabled={this.state.isBtnUpdateDisable}
                             />
                           </FormGroup>
@@ -243,4 +341,11 @@ class ChiTietUserModal extends Component {
     );
   }
 }
-export default ChiTietUserModal;
+export default connect(
+  state => ({
+    manageruser: state.manageruser
+  }),
+  {
+    postupload: postUploadUserAction
+  }
+)(ChiTietUserModal);

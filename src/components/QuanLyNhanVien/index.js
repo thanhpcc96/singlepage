@@ -1,3 +1,5 @@
 import QuanLyNhanVien from "./Quanlynhanvien";
-import QuanlyNhanVienReducer from './reducer';
-export { QuanLyNhanVien,QuanlyNhanVienReducer};
+import ThemNhanVien from "./ThemNV";
+import QuanlyNhanVienReducer from "./reducer";
+
+export { QuanLyNhanVien, QuanlyNhanVienReducer, ThemNhanVien };

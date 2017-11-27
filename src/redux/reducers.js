@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { reducer as formReducer } from 'redux-form'
 import {
   LoginReducer,
   QuanlyNhanVienReducer,
@@ -7,6 +8,7 @@ import {
 } from "../components";
 
 export default combineReducers({
+  form: formReducer,
   user: LoginReducer,
   manageruser: QuanlyNhanVienReducer,
   managerclient: QuanlykhachhangReducer,

@@ -15,8 +15,10 @@ class QuanLyNhanVien extends Component {
     this.state = {
       data: null,
       idSelect: "",
-      lgShow: false
-    };
+      lgShow: false,
+      dataSelect: undefined,
+      isDisableChitiet: true
+        };
     this.props.getListUserAction();
   }
   onRowSelect(row, isSelected, e) {
@@ -25,6 +27,15 @@ class QuanLyNhanVien extends Component {
     });
     countRow++;
     if (isSelected === true && countRow === 1) {
+      this.state.data.forEach(chuyen=>{
+        if(chuyen._id===row._id){
+          this.setState({
+            dataSelect: chuyen,
+            isDisableChitiet: false
+          });
+          return;
+        }
+      })
       this.setState({
         idSelect: row._id
       });
@@ -35,6 +46,9 @@ class QuanLyNhanVien extends Component {
     }
     if (isSelected === false) {
       countRow = 0;
+      this.setState({
+        isDisableChitiet: true
+      })
     }
   }
 
@@ -55,7 +69,8 @@ class QuanLyNhanVien extends Component {
         chucvu:
           user.role === 2
             ? "Lai xe"
-            : user.role === 3 ? "Phu xe" : "Kiem soat vien"
+            : user.role === 3 ? "Phu xe" : "Kiem soat vien",
+        photo: user.info.photoProfile || undefined
       };
       result.push(newUser);
     });
@@ -69,6 +84,9 @@ class QuanLyNhanVien extends Component {
     }
   }
   render() {
+    console.log('==============History=================');
+    console.log(this.props);
+    console.log('====================================');
     let lgClose = () => this.setState({ lgShow: false });
     const selectRowProp = {
       mode: "checkbox",
@@ -94,10 +112,10 @@ class QuanLyNhanVien extends Component {
                 <i className="fa fa-plus" />
               </Link>
             */}
-              <Button bsStyle="info" onClick={() => this.setState({ lgShow: true })}>
+              <Button disabled={this.state.isDisableChitiet} bsStyle="info" onClick={() => this.setState({ lgShow: true })}>
                 Chi tiết
               </Button> &nbsp;
-              <Button bsStyle="warning" onClick={() => this.setState({ lgShow: true })}>
+              <Button bsStyle="warning" onClick={() =>this.props.history.push('/manager/user/add')}>
                 +
               </Button>
             </span>
@@ -167,9 +185,11 @@ class QuanLyNhanVien extends Component {
                                   Chuc vu
                                 </TableHeaderColumn>
                               </BootstrapTable>
+
                               <ChitietNhanVienModal
                                 show={this.state.lgShow}
                                 onHide={lgClose}
+                                data={this.state.dataSelect}
                               />
                             </div>
                           </div>

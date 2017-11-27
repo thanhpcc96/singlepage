@@ -33,9 +33,9 @@ class userAPI {
       throw error;
     }
   }
-  async getCheckJWT(){
+  async getCheckJWT() {
     try {
-      const res= await axios.get(this.pathAccount+'checkjwt');
+      const res = await axios.get(this.pathAccount + "checkjwt");
       return res;
     } catch (error) {
       throw error;
@@ -43,31 +43,78 @@ class userAPI {
   }
   async postForgot(email) {
     try {
-      const res = await axios.post(this.pathAccount + "forgot", {... email });
+      const res = await axios.post(this.pathAccount + "forgot", { ...email });
       return res;
     } catch (error) {
       throw error;
     }
   }
-  async getListUsers(){
+  async getListUsers() {
     try {
-      const res= await axios.get(this.pathManagerUser+"all");
+      const res = await axios.get(this.pathManagerUser + "all");
       return res;
     } catch (error) {
       throw error;
     }
   }
-  async getListKhachHang(){
+  async getDetailUser(id) {
     try {
-      const res= await axios.get(this.pathManagerClient+ "all");
+      const res = await axios.get(this.pathManagerUser + id);
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async updateInfoUser(params){
+    try {
+      const res= await axios.post(this.pathManagerUser+'/update',{...params})
       return res;
     } catch (error) {
       throw error
     }
   }
-  async getListXe(){
+  async deleteUser(id){
     try {
-      const res= await axios.get(this.pathManagerCoach+ 'all');
+      const res= await axios.post(this.pathManagerUser+'delete',{...id})
+    } catch (error) {
+      throw error
+    }
+  }
+  async postCreateUSer(params){
+    try {
+      const res= await axios.post(this.pathManagerUser+'create',{...params});
+      return res;
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async postUploadImage(data) {
+    try {
+      const res = await axios.post(this.pathManagerUser + "upload", data, {
+        headers: {
+          "content-type": "multipart/form-data"
+        }
+      });
+      return res;
+      console.log("===============axuos res=====================");
+      console.log(res);
+      console.log("====================================");
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getListKhachHang() {
+    try {
+      const res = await axios.get(this.pathManagerClient + "all");
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getListXe() {
+    try {
+      const res = await axios.get(this.pathManagerCoach + "all");
       return res;
     } catch (error) {
       throw error;

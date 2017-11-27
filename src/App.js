@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import {
   HomePage,
   ThemAdmin,
-  ThemNV,
+  ThemNhanVien,
   Lichsugiaodich,
   Login,
   QuanLyAdmin,
@@ -54,7 +54,7 @@ const App = ({ location, isLogin }) => (
       location={location}
       path={baseURL+"/manager/user/add"}
       exact
-      component={ThemNV}
+      component={ThemNhanVien}
     />
     <UserRoute
       location={location}
