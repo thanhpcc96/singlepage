@@ -75,7 +75,8 @@ class userAPI {
   }
   async deleteUser(id){
     try {
-      const res= await axios.post(this.pathManagerUser+'delete',{...id})
+      const res= await axios.post(this.pathManagerUser+'delete',{ iduser: id});
+      return res;
     } catch (error) {
       throw error
     }
@@ -91,15 +92,13 @@ class userAPI {
 
   async postUploadImage(data) {
     try {
-      const res = await axios.post(this.pathManagerUser + "upload", data, {
+      const res =  axios.post(this.pathManagerUser + "upload", data, {
         headers: {
-          "content-type": "multipart/form-data"
+          "Content-Type": "multipart/form-data"
         }
       });
       return res;
-      console.log("===============axuos res=====================");
-      console.log(res);
-      console.log("====================================");
+      
     } catch (error) {
       throw error;
     }
@@ -118,6 +117,15 @@ class userAPI {
       return res;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async getListChuyenXe(){
+    try {
+      const res= await axios.get(this.pathManagerChuyenxe + "all");
+      return res
+    } catch (error) {
+      throw error
     }
   }
 }

@@ -1,2 +1,3 @@
 import Quanlyve from "./Quanlyve";
-export { Quanlyve };
+import QuanlyveReducer from "./reducer";
+export { Quanlyve, QuanlyveReducer };

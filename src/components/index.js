@@ -12,10 +12,14 @@ import {
   ThemNhanVien
 } from "./QuanLyNhanVien";
 import { TongQuan } from "./TongQuan";
-import { QuanLyChuyenXe } from "./Quanlychuyenxe";
+import {
+  QuanLyChuyenXe,
+  Chitietchuyenxe,
+  QuanLyChuyenXeReducer
+} from "./Quanlychuyenxe";
 import { Quanlytuyen } from "./Quanlytuyenxe";
 import { Quanlyve } from "./Quanlyve";
-import { Quanlyxe, QuanlyxeReducer } from "./Quanlyxe";
+import { Quanlyxe, QuanlyxeReducer, Chitietxe, Themxe } from "./Quanlyxe";
 import { Report } from "./Reporting";
 
 export {
@@ -34,9 +38,13 @@ export {
   QuanlyNhanVienReducer,
   TongQuan,
   QuanLyChuyenXe,
+  Chitietchuyenxe,
+  QuanLyChuyenXeReducer,
   Quanlytuyen,
   Quanlyve,
   Quanlyxe,
   QuanlyxeReducer,
+  Chitietxe,
+  Themxe,
   Report
 };

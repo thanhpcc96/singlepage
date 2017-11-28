@@ -61,6 +61,7 @@ export function getDetailUserAction(id) {
   };
 }
 
+
 export function postUploadUserAction(formData) {
   console.log("====================formData================");
   console.log(formData);
@@ -70,13 +71,10 @@ export function postUploadUserAction(formData) {
       type: POST_UPLOAD_USER
     });
     try {
-      const data = await fetch(
-        "http://localhost:3000/api/v1/manager/user/upload",
-        {
-          method: "POST",
-          body: formData
-        }
-      );
+      const data = await userAPI.postUploadImage(formData);
+      console.log("================respons====================");
+      console.log(data);
+      console.log("====================================");
 
       // const data =await userAPI.postUploadImage(formData);
       console.log("====================================");

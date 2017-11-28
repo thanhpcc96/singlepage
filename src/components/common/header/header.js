@@ -225,10 +225,10 @@ class Header extends Component {
                   aria-labelledby="dropdownMenuLink"
                 >
                   <li>
-                    <a>
-                      <i className="fa fa-user" aria-hidden="true" /> Thông tin
+                    
+                      <Link className="fa fa-user" aria-hidden="true" to={"/profile"}> Thông tin
                       tài khoản
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import Datepicker from "react-datepicker";
+import { DateTimePicker, DropdownList } from "react-widgets";
 import { Link } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
@@ -18,7 +18,7 @@ import {
   Table,
   FormControl
 } from "react-bootstrap";
-import { getDetailUserAction, postUploadUserAction } from "./action";
+import { updateInfo, postUploadUserAction } from "./action";
 class ChiTietUserModal extends Component {
   constructor(props) {
     super(props);
@@ -27,15 +27,50 @@ class ChiTietUserModal extends Component {
       file: "",
       imagePreviewUrl: "",
       haveFile: false,
-      isUploading: false
+      isUploading: false,
+      fullname: undefined,
+      isFullnameError: false,
+      email: undefined,
+      isEmailError: false,
+      passport: undefined,
+      isPassportError: false,
+      phone: undefined,
+      isPhoneError: false,
+      address: undefined,
+      role: 2,
+      gender: undefined,
+      username: undefined,
+      dateofbirth: undefined,
+      isDisableButton: true
     };
+  }
+  _checkValidateEnableButton() {
+    const {
+      isFullnameError,
+      isEmailError,
+      isPassportError,
+      isPhoneError,
+      isPasswordError
+    } = this.state;
+    if (
+      isFullnameError === false &&
+      isEmailError === false &&
+      isPassportError === false &&
+      isPhoneError === false &&
+      this.state.dateofbirth !== null
+    ) {
+      this.setState({
+        isDisableButton: false
+      });
+    } else {
+      this.setState({
+        isDisableButton: true
+      });
+    }
   }
 
   onImageDrop(files) {
     let file = files[0];
-    console.log('====================================');
-    console.log(file);
-    console.log('====================================');
     this.setState({
       file: file,
       //imagePreviewUrl: reader.result,
@@ -54,27 +89,43 @@ class ChiTietUserModal extends Component {
       this.props.onHide;
       return;
     }
-    if (this.props.data !== undefined) {
-      this.setState({
-        imagePreviewUrl: this.props.data.photo
-      });
-    } else {
-      this.setState({
-        imagePreviewUrl: ""
-      });
-    }
+    const {
+      fullname,
+      email,
+      phone,
+      address,
+      username,
+      gender,
+      role,
+      dateofbirth,
+      passport
+    } = this.props.data;
+    this.setState({
+      fullname,
+      email,
+      phone,
+      address,
+      username,
+      gender,
+      role,
+      dateofbirth,
+      passport
+    });
+
     //this.props.getDetailUserAction(this.props.data._id);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.manageruser.uploaddata !== null) {
-      let reader = new FileReader();
-      reader.readAsDataURL(this.state.file);
-      reader.onloadend = () => {
-        this.setState({
-          isUploading: false,
-          imagePreviewUrl: reader.result
-        });
-      };
+      try {
+        let reader = new FileReader();
+        reader.readAsDataURL(this.state.file);
+        reader.onloadend = () => {
+          this.setState({
+            isUploading: false,
+            imagePreviewUrl: reader.result
+          });
+        };
+      } catch (error) {}
     }
     if (nextProps.manageruser.uploaderror !== null) {
       this.setState({
@@ -82,31 +133,73 @@ class ChiTietUserModal extends Component {
       });
       alert("Upload that bai");
     }
+    if(nextProps.manageruser.uploaddata!==null){
+      alert('Update thanh cong, refesh lai table nhe!')
+    }
+    if(nextProps.manageruser.updateerror!==null){
+      alert('Update that bai')
+    }
+  }
+  _changeFullname(event) {
+    this.setState({
+      isFullnameError: false,
+      fullname: event.target.value
+    });
+  }
+  _changeFullname(event) {
+    if (event.target.value.toString().lenght > 3) {
+      this.setState({
+        isFullnameError: false,
+        fullname: event.target.value
+      });
+    } else {
+      this.setState({
+        isFullnameError: true,
+        fullname: null
+      });
+    }
+  }
+  handleSubmit(event) {
+    event.preventDefault();
+    const {
+      fullname,
+      email,
+      phone,
+      address,
+      username,
+      gender,
+      role,
+      dateofbirth,
+      passport
+    } = this.state;
+    /**
+     * firstname: Joi.string(),
+      lastname: Joi.string(),
+      address: Joi.string(),
+      dateofbirth: Joi.date(),
+      phone: Joi.string().regex(/^[0-9-+]+$/),
+     */
+    this.props.updateInfo({
+      iduser: this.props.data._id,
+      fullname,
+      email,
+      phone,
+      address,
+      username,
+      gender,
+      role,
+      dateofbirth,
+      passport
+    });
   }
   render() {
-    console.log("===============data==modal===================");
-    console.log(this.props.data);
-    console.log("====================================");
-    // _id: user._id,
-    //     email: user.email,
-    //     username: user.username,
-    //     status: user.status,
-    //     role: user.role,
-    //     fullname: user.info.fullname,
-    //     passport: user.info.passportNumber,
-    //     address: user.info.address,
-    //     phone: user.info.phoneNumber,
-    //     gender: user.info.gender,
-    //     chucvu:
-    //       user.role === 2
-    //         ? "Lai xe"
-    //         : user.role === 3 ? "Phu xe" : "Kiem soat vien"
     return (
       <Modal
         {...this.props}
         bsSize="large"
         aria-labelledby="contained-modal-title-lg"
         restoreFocus
+        onShow={() => this._handleNoData()}
         onEnter={() => this._handleNoData()}
       >
         <Modal.Header closeButton>
@@ -143,7 +236,7 @@ class ChiTietUserModal extends Component {
                 )}
               </Col>
               <Col xs={9} md={6}>
-                <form>
+                <form onSubmit={this.handleSubmit.bind(this)}>
                   <Table striped bordered condensed hover>
                     <tbody>
                       <tr>
@@ -151,15 +244,68 @@ class ChiTietUserModal extends Component {
                         <td>
                           <FormGroup
                             controlId="formValidationSuccess1"
-                            validationState="null"
+                            validationState={
+                              this.state.isFullnameError === true
+                                ? "warning"
+                                : null
+                            }
                           >
-                            <ControlLabel />
                             <FormControl
                               disabled={this.state.isBtnUpdateDisable}
+                              onChange={this._changeFullname.bind(this)}
                               type="text"
                               value={
                                 this.props.data
-                                  ? this.props.data.fullname
+                                  ? this.state.fullname
+                                  : "Chua chon doi tuong hien thi"
+                              }
+                            />
+                            {this.state.isFullnameError === true ? (
+                              <HelpBlock>Tên phải dài 1 tý</HelpBlock>
+                            ) : (
+                              undefined
+                            )}
+                            <FormControl.Feedback />
+                          </FormGroup>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Ngày sinh</td>
+                        <td>
+                          <FormGroup
+                            controlId="formValidationSuccess1"
+                            validationState="null"
+                          >
+                            <DateTimePicker
+                              className="form-control"
+                              disabled={this.state.isBtnUpdateDisable}
+                              defaultValue={
+                                this.props.data
+                                  ? new Date("1990-01-01")
+                                  : new Date("1990-01-01")
+                              }
+                              max={new Date("1998/12/30")}
+                              time={false}
+                              onSelect={data =>
+                                this.setState({ dateofbirth: data })
+                              }
+                            />
+                          </FormGroup>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Giới tính</td>
+                        <td>
+                          <FormGroup
+                            controlId="formValidationSuccess1"
+                            validationState="null"
+                          >
+                            <FormControl
+                              disabled={true}
+                              type="text"
+                              value={
+                                this.props.data
+                                  ? this.state.gender
                                   : "Chua chon doi tuong hien thi"
                               }
                             />
@@ -171,18 +317,31 @@ class ChiTietUserModal extends Component {
                         <td>
                           <FormGroup
                             controlId="formValidationSuccess1"
-                            validationState="null"
+                            validationState={
+                              this.state.isPassportError === true
+                                ? "error"
+                                : undefined
+                            }
                           >
                             <ControlLabel />
                             <FormControl
                               disabled={this.state.isBtnUpdateDisable}
                               type="text"
+                              onChange={this._inputPassport.bind(this)}
                               value={
                                 this.props.data
-                                  ? this.props.data.passport
+                                  ? this.state.passport
                                   : "Chua chon doi tuong hien thi"
                               }
                             />
+                            {this.state.isPassportError === true ? (
+                              <HelpBlock>
+                                Số chứng minh thư phải là số
+                              </HelpBlock>
+                            ) : (
+                              undefined
+                            )}
+                            <FormControl.Feedback />
                           </FormGroup>
                         </td>
                       </tr>
@@ -230,18 +389,27 @@ class ChiTietUserModal extends Component {
                           {" "}
                           <FormGroup
                             controlId="formValidationSuccess1"
-                            validationState="null"
+                            validationState={
+                              this.state.isPhoneError === true ? "error" : null
+                            }
                           >
                             <ControlLabel />
                             <FormControl
-                              disabled={true}
+                              disabled={this.state.isBtnUpdateDisable}
                               type="text"
+                              onChange={this._inputPhone.bind(this)}
                               value={
                                 this.props.data
-                                  ? this.props.data.phone
+                                  ? this.state.phone
                                   : "Chua chon doi tuong hien thi"
                               }
                             />
+                            {this.state.isPhoneError === true ? (
+                              <HelpBlock>Số điện thoại phải là số</HelpBlock>
+                            ) : (
+                              undefined
+                            )}
+                            <FormControl.Feedback />
                           </FormGroup>
                         </td>
                       </tr>
@@ -251,18 +419,27 @@ class ChiTietUserModal extends Component {
                           {" "}
                           <FormGroup
                             controlId="formValidationSuccess1"
-                            validationState="null"
+                            validationState={
+                              this.state.isEmailError === true ? "error" : null
+                            }
                           >
                             <ControlLabel />
                             <FormControl
                               type="email"
+                              onChange={this._inputEmail.bind(this)}
                               value={
                                 this.props.data
-                                  ? this.props.data.email
+                                  ? this.state.email
                                   : "Chua chon doi tuong hien thi"
                               }
                               disabled={this.state.isBtnUpdateDisable}
                             />
+                            {this.state.isEmailError === true ? (
+                              <HelpBlock>Email không đúng định dạng</HelpBlock>
+                            ) : (
+                              undefined
+                            )}
+                            <FormControl.Feedback />
                           </FormGroup>
                         </td>
                       </tr>
@@ -276,9 +453,10 @@ class ChiTietUserModal extends Component {
                             <ControlLabel />
                             <FormControl
                               type="text"
+                              onChange={this._inputAddress.bind(this)}
                               value={
                                 this.props.data
-                                  ? this.props.data.address
+                                  ? this.state.address
                                   : "Chua chon doi tuong hien thi"
                               }
                               disabled={this.state.isBtnUpdateDisable}
@@ -295,16 +473,49 @@ class ChiTietUserModal extends Component {
                             validationState="null"
                           >
                             <ControlLabel />
-                            <FormControl
-                              type="text"
-                              value={
-                                this.props.data
-                                  ? this.props.data.chucvu
-                                  : "Chua chon doi tuong hien thi"
-                              }
+                            <DropdownList
+                              data={chucvu}
                               disabled={this.state.isBtnUpdateDisable}
+                              className="form-control"
+                              valueField={"id"}
+                              textField={"value"}
+                              defaultValue={
+                                this.props.data ? this.props.data.role : 5
+                              }
+                              onSelect={value =>
+                                this.setState({ role: value.id })
+                              }
+                              placeholder={"nhấn để chọn giới tính(bắt buộc"}
                             />
                           </FormGroup>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td />
+                        <td>
+                          {this.state.isBtnUpdateDisable === false ? (
+                            <div>
+                              <Button
+                                bsStyle="danger"
+                                onClick={() =>
+                                  this.setState({ isBtnUpdateDisable: true })
+                                }
+                              >
+                                Hủy{" "}
+                              </Button>
+                              <Button
+                                type="submit"
+                                bsStyle="info"
+                                disabled={
+                                  this.props.manageruser.isLoadingUpdate
+                                }
+                              >
+                                Lưu
+                              </Button>
+                            </div>
+                          ) : (
+                            undefined
+                          )}
                         </td>
                       </tr>
                     </tbody>
@@ -324,21 +535,62 @@ class ChiTietUserModal extends Component {
               Cập nhật thông tin
             </Button>
           ) : (
-            <div>
-              <Button
-                bsStyle="danger"
-                onClick={() => this.setState({ isBtnUpdateDisable: true })}
-              >
-                Hủy{" "}
-              </Button>
-              <Button bsStyle="info" onClick={this.props.onHide}>
-                Lưu
-              </Button>
-            </div>
+            undefined
           )}
         </Modal.Footer>
       </Modal>
     );
+  }
+  _inputEmail(event) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (re.test(event.target.value) === true) {
+      this.setState({
+        email: event.target.value,
+        isEmailError: false
+      });
+    } else {
+      this.setState({
+        email: null,
+        isEmailError: true
+      });
+    }
+    this._checkValidateEnableButton();
+  }
+  _inputPassport(event) {
+    const chuan = /^[0-9-+]+$/;
+    if (chuan.test(event.target.value)) {
+      this.setState({
+        passport: event.target.value,
+        isPassportError: false
+      });
+    } else {
+      this.setState({
+        passport: null
+        // isPassportError: true
+      });
+    }
+    this._checkValidateEnableButton();
+  }
+  _inputPhone(event) {
+    const chuan = /^[0-9-+]+$/;
+    if (chuan.test(event.target.value)) {
+      this.setState({
+        phone: event.target.value,
+        isPhoneError: false
+      });
+    } else {
+      this.setState({
+        phone: null,
+        isPhoneError: true
+      });
+    }
+    this._checkValidateEnableButton();
+  }
+  _inputAddress(event) {
+    this.setState({
+      address: event.target.value
+    });
+    this._checkValidateEnableButton();
   }
 }
 export default connect(
@@ -346,6 +598,13 @@ export default connect(
     manageruser: state.manageruser
   }),
   {
-    postupload: postUploadUserAction
+    postupload: postUploadUserAction,
+    updateInfo
   }
 )(ChiTietUserModal);
+
+const chucvu = [
+  { id: 2, value: "Lái xe" },
+  { id: 3, value: "Phụ xe" },
+  { id: 4, value: "Kiểm soát viên" }
+];

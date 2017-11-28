@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 
 import ChitietNhanVienModal from "./ChiTietNhanVien";
-import { getListUserAction } from "./action";
+import { getListUserAction, deleteUser } from "./action";
 
 let countRow = 0;
 
@@ -18,37 +18,29 @@ class QuanLyNhanVien extends Component {
       lgShow: false,
       dataSelect: undefined,
       isDisableChitiet: true
-        };
+    };
     this.props.getListUserAction();
   }
   onRowSelect(row, isSelected, e) {
     this.setState({
       idSelect: null
     });
-    countRow++;
-    if (isSelected === true && countRow === 1) {
-      this.state.data.forEach(chuyen=>{
-        if(chuyen._id===row._id){
+    if (isSelected === true) {
+      this.state.data.forEach(chuyen => {
+        if (chuyen._id === row._id) {
           this.setState({
             dataSelect: chuyen,
             isDisableChitiet: false
           });
           return;
         }
-      })
-      this.setState({
-        idSelect: row._id
       });
     }
-    if (isSelected && countRow > 1) {
-      alert("Chưa hỗ trợ chọn nhiều hàng!");
-      return false;
-    }
     if (isSelected === false) {
-      countRow = 0;
       this.setState({
+        dataSelect: null,
         isDisableChitiet: true
-      })
+      });
     }
   }
 
@@ -70,7 +62,8 @@ class QuanLyNhanVien extends Component {
           user.role === 2
             ? "Lai xe"
             : user.role === 3 ? "Phu xe" : "Kiem soat vien",
-        photo: user.info.photoProfile || undefined
+        photo: user.info.photoProfile,
+        role: user.role
       };
       result.push(newUser);
     });
@@ -83,15 +76,20 @@ class QuanLyNhanVien extends Component {
       this._mapingData(nextProps.manageruser.listuser.result);
     }
   }
+  _handleXoa() {
+    this.props.deleteUser(this.state.dataSelect._id.toString());
+    this.props.getListUserAction();
+    this.setState({
+      dataSelect: null,
+      isDisableChitiet: true
+    });
+  }
   render() {
-    console.log('==============History=================');
-    console.log(this.props);
-    console.log('====================================');
     let lgClose = () => this.setState({ lgShow: false });
     const selectRowProp = {
-      mode: "checkbox",
+      mode: "radio",
       bgColor: "#4DD0E1", // you should give a bgcolor, otherwise, you can't regonize which row has been selected
-      hideSelectColumn: true, // enable hide selection column.
+      // hideSelectColumn: true, // enable hide selection column.
       clickToSelect: true, // you should enable clickToSelect, otherwise, you can't select column.
       onSelect: this.onRowSelect.bind(this)
     };
@@ -112,11 +110,33 @@ class QuanLyNhanVien extends Component {
                 <i className="fa fa-plus" />
               </Link>
             */}
-              <Button disabled={this.state.isDisableChitiet} bsStyle="info" onClick={() => this.setState({ lgShow: true })}>
+              <Button
+                bsStyle="info"
+                onClick={() => this.props.getListUserAction()}
+              >
+                Reload
+              </Button>{" "}
+              &nbsp;
+              <Button
+                disabled={this.state.isDisableChitiet}
+                bsStyle="info"
+                onClick={() => this.setState({ lgShow: true })}
+              >
                 Chi tiết
-              </Button> &nbsp;
-              <Button bsStyle="warning" onClick={() =>this.props.history.push('/manager/user/add')}>
+              </Button>{" "}
+              &nbsp;
+              <Button
+                bsStyle="warning"
+                onClick={() => this.props.history.push("/manager/user/add")}
+              >
                 +
+              </Button>
+              <Button
+                style={{ marginRight: 15 }}
+                bsStyle="danger"
+                onClick={() => this._handleXoa()}
+              >
+                Xóa
               </Button>
             </span>
           </div>
@@ -219,6 +239,7 @@ export default connect(
     manageruser: state.manageruser
   }),
   {
-    getListUserAction
+    getListUserAction,
+    deleteUser
   }
 )(QuanLyNhanVien);

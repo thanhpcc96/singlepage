@@ -1,7 +1,44 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import { getListVeAction } from "./action";
+import { connect } from "react-redux";
 import "../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 class Quanlyve extends Component {
+  constructor(props) {
+    super(props);
+    this.props.getListVeAction();
+    this.state = {
+      data: []
+    };
+  }
+  //hàm xử lý các data từ server trả về
+  _XuLyData(listVe) {
+    const result = [];
+    listVe.forEach(element => {
+      const vemoi = {
+        Customer: element.Customer,
+        codeTicket: element.codeTicket,
+        chuyenxe: element.inChuyenXe,
+        hieuluc: element.isAvaiable === false ? "Vé còn giá trị" : "Vé đã hủy",
+        kiemtra: element.isDoneCheck === true ? "Đã kiểm tra" : "Chưa kiểm tra",
+        thanhtoan:
+          element.isPayed === true ? "Đã thanh toán" : "Chưa thanh toán",
+        gia: element.price,
+        diemlen: element.routeOfTicket.from,
+        diemxuong: element.routeOfTicket.to,
+        loaive: element.typeTicket === "GIUCHO" ? "Giữ chỗ" : " Đặt chỗ"
+      };
+      result.push(vemoi);
+    });
+    this.setState({
+      data: result
+    });
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.managerve.listVe !== null) {
+      this._XuLyData(nextProps.managerve.listVe.result);
+    }
+  }
   render() {
     return (
       <section className="content">
@@ -43,37 +80,42 @@ class Quanlyve extends Component {
                               pagination
                               search={true}
                               multiColumnSearch={true}
+                              data={this.state.data}
                             >
                               <TableHeaderColumn dataField="_id" isKey hidden>
                                 {" "}
                                 Mã vé
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Giá vé
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Thời gian bắt đầu
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Điểm bắt đầu
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Điểm xuống
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Thuộc chuyến xe
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+                              <TableHeaderColumn dataField="Customer">
                                 Khách hàng
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+                              <TableHeaderColumn dataField="codeTicket">
+                                Mã vé
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="gia">
+                                Giá vé
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="diemlen">
+                                Điểm bắt đầu
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="diemxuong">
+                                Điểm xuống
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="chuyenxe">
+                                Thuộc chuyến xe
+                              </TableHeaderColumn>
+
+                              <TableHeaderColumn dataField="hieuluc">
                                 Trạng thái hủy
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+                              <TableHeaderColumn dataField="loaive">
                                 Loại vé
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+                              <TableHeaderColumn dataField="thanhtoan">
                                 Thanh toán
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="kiemtra">
+                                Kiểm tra
                               </TableHeaderColumn>
                             </BootstrapTable>
                           </div>
@@ -85,9 +127,7 @@ class Quanlyve extends Component {
                               id="datatable_info"
                               role="status"
                               aria-live="polite"
-                            >
-                              Showing 1 to 22 of 22 entries
-                            </div>
+                            />
                           </div>
                           <div className="col-sm-6">
                             <div
@@ -135,5 +175,16 @@ class Quanlyve extends Component {
     );
   }
 }
-export default Quanlyve;
-
+export default connect(
+  state => ({
+    // map state từ store vào props của component
+    managerve: state.managerve
+  }),
+  {
+    //map dispatch vào props
+    getListVeAction
+  }
+)(
+  //component muốn kết nối với state của store
+  Quanlyve
+);

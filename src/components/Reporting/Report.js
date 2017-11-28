@@ -6,15 +6,28 @@ import {
   linearGradient,
   defs,
   XAxis,
-  CartesianGrid,
   Tooltip,
-  Area
+  Area,
+  BarChart,
+  Bar,
+  YAxis,
+  CartesianGrid,
+  Legend
 } from "recharts";
 
 const data = [
   { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
   { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
   { name: "Page C", uv: 2000, pv: 9800, amt: 2290 }
+];
+const data1 = [
+  { name: "Tháng 7", Da: 4000, female: 2400, male: 2400 },
+  { name: "Tháng 8", uv: 3000, female: 1398, male: 2210 },
+  { name: "Tháng 9", uv: 2000, female: 9800, male: 2290 },
+  { name: "Tháng 10", uv: 2780, female: 3908, male: 2000 },
+  { name: "Tháng 11", uv: 1890, female: 4800, male: 2181 },
+  { name: "Tháng 12", uv: 2390, female: 3800, male: 2500 },
+  { name: "Tháng 6", uv: 3490, female: 4300, male: 2100 }
 ];
 const Report = () => (
   <section className="content">
@@ -53,6 +66,21 @@ const Report = () => (
           fill="url(#colorPv)"
         />
       </AreaChart>
+      <BarChart
+        width={600}
+        height={300}
+        data={data1}
+        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+      >
+        <XAxis dataKey="name" />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="female" stackId="a" fill="#8884d8" />
+        <Bar dataKey="male" stackId="a" fill="#82ca9d" />
+        <Bar dataKey="uv" fill="#ffc658" />
+      </BarChart>
     </div>
   </section>
 );

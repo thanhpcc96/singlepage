@@ -43,6 +43,7 @@ html {
 
 .btn {
   line-height: 1.42857143 !important;
+  margin-left: 5 px;
 }
 .act_ion {
   font-size: 20px;

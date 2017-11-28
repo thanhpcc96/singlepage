@@ -1,8 +1,75 @@
 import React, { Component } from "react";
+import { getListChuyenXeAction } from "./action";
+import { connect } from "react-redux";
+import { Button } from "react-bootstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
+
+import moment from '../../i18n/timeZone';
+
+moment.locale('vi');
+
 class Quanlychuyenxe extends Component {
+  constructor(props) {
+    super(props);
+    this.props.getListChuyenXeAction();
+    this.state = {
+      data: [],
+      rowSelect: null,
+      isDisableChitiet: true
+    };
+  }
+  onRowSelect(row, isSelected, e) {
+    if (isSelected === true) {
+      this.state.data.forEach(chuyen => {
+        if (chuyen._id === row._id) {
+          this.setState({
+            dataSelect: chuyen,
+            isDisableChitiet: false
+          });
+          return;
+        }
+      });
+    }
+    if (isSelected === false) {
+      this.setState({
+        dataSelect: null,
+        isDisableChitiet: true
+      });
+    }
+  }
+  _XuLyData(listChuyenXe) {
+    const result = [];
+    listChuyenXe.forEach(chuyen => {
+      const chuyenmoi = {
+        tenchuyen: chuyen.tenchuyen,
+        choNgoi: chuyen.choNgoi,
+        dadat: chuyen.dadat,
+        loai: chuyen.loai,
+        timeStart: moment(chuyen.timeStart).format('L, LT'),
+        _id: chuyen._id,
+        danhgia: chuyen.danhgia
+      };
+      result.push(chuyenmoi);
+    });
+    this.setState({
+      data: result
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.managerChuyen.listChuyenXe !== null) {
+      this._XuLyData(nextProps.managerChuyen.listChuyenXe.result);
+    }
+  }
   render() {
+    const selectRowProp = {
+      mode: "radio",
+      bgColor: "#4DD0E1", // you should give a bgcolor, otherwise, you can't regonize which row has been selected
+      // hideSelectColumn: true, // enable hide selection column.
+      clickToSelect: true, // you should enable clickToSelect, otherwise, you can't select column.
+      onSelect: this.onRowSelect.bind(this)
+    };
     return (
       <section className="content">
         <div className="wraper container-fluid">
@@ -12,6 +79,21 @@ class Quanlychuyenxe extends Component {
                 <span />
               </span>
             </h3>
+            <span className="tp_rht">
+              <Button
+                disabled={this.state.isDisableChitiet}
+                bsStyle="info"
+                onClick={() =>
+                  this.props.history.push({
+                    pathname: "/manager/chuyen/detail",
+                    // search: '?chuyen=' + this.state.rowSelect,
+                    state: { idChuyen: this.state.rowSelect }
+                  })
+                }
+              >
+                Chi tiết
+              </Button>&nbsp;
+            </span>
           </div>
           <div className="row">
             <div className="col-md-12">
@@ -41,38 +123,38 @@ class Quanlychuyenxe extends Component {
                           <div className="col-sm-12">
                             <BootstrapTable
                               pagination
+                              data={this.state.data}
                               search={true}
                               multiColumnSearch={true}
+                              options={{
+                                noDataText: "Không có dữ liệu của bất kỳ chuyến xe nào",
+                                exportCSVText: "Trích xuất ra excel",
+                                csvFileName: "Danhsachnhanvien.csv"
+                              }}
+                              striped
+                              hover
+                              condensed
+                              exportCSV
+                              selectRow={selectRowProp}
                             >
                               <TableHeaderColumn dataField="_id" isKey hidden>
                                 {" "}
                                 Số chuyến
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+                              <TableHeaderColumn dataField="tenchuyen">
+                                Tên chuyến
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="timeStart">
                                 Thời gian bắt đầu
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Thời gian kết thúc
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Thuộc tuyến
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Thanh tra kiểm tra
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Lái xe và phụ xe
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Xe
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
-                                Vé trong chuyến
-                              </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+
+                              <TableHeaderColumn dataField="choNgoi">
                                 Số chỗ ngồi
                               </TableHeaderColumn>
-                              <TableHeaderColumn dataField="">
+                              <TableHeaderColumn dataField="dadat">
+                                Số chỗ ngồi đã đặt
+                              </TableHeaderColumn>
+                              <TableHeaderColumn dataField="loai">
                                 Chiều di chuyển
                               </TableHeaderColumn>
                             </BootstrapTable>
@@ -85,9 +167,7 @@ class Quanlychuyenxe extends Component {
                               id="datatable_info"
                               role="status"
                               aria-live="polite"
-                            >
-                              Showing 1 to 22 of 22 entries
-                            </div>
+                            />
                           </div>
                           <div className="col-sm-6">
                             <div
@@ -135,4 +215,11 @@ class Quanlychuyenxe extends Component {
     );
   }
 }
-export default Quanlychuyenxe;
+export default connect(
+  state => ({
+    managerChuyen: state.managerchuyen
+  }),
+  {
+    getListChuyenXeAction
+  }
+)(Quanlychuyenxe);

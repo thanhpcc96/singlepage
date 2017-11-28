@@ -9,9 +9,11 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  HelpBlock
+  HelpBlock,
+  Button,
+  Alert
 } from "react-bootstrap";
-import { postCreateUser } from "./action";
+import { postCreateUser, getListUserAction } from "./action";
 
 moment.locale("vi");
 momentLocalizer();
@@ -35,10 +37,19 @@ class ThemNV extends Component {
       isPasswordError: false,
       role: 2,
       dateofbirth: null,
-      gender: null
+      gender: null,
+      isDisableButton: true,
+      isShowAlert: false,
+      isErrorCreate: false,
+      errorMessage: "",
+      
     };
   }
   handleSubmit(event) {
+    event.preventDefault();
+    console.log('================aaaaaaa====================');
+    console.log(event);
+    console.log('====================================');
     const {
       email,
       fullname,
@@ -52,7 +63,10 @@ class ThemNV extends Component {
       isPassportError,
       isPhoneError,
       isPasswordError,
-      role
+      role,
+      dateofbirth,
+      gender,
+      isUsernameError
     } = this.state;
     if (
       isFullnameError === false &&
@@ -70,14 +84,77 @@ class ThemNV extends Component {
         passport,
         phone,
         password,
-        role
+        role,
+        dateofbirth,
+        gender,
+        username
       });
     }
     /**createUser: ["email", 'fullname','lastname','address','passport','phone','gender','dateofbirth'], */
-
-    event.preventDefault();
+  }
+  handleAlertDismiss(){ this.setState({ isErrorCreate: false})}
+  componentWillReceiveProps(nextProps) {
+    /**
+     * 
+      isLoadingCreate: false,
+      usernew: null,
+      errorcreate: null
+     */
+    if (nextProps.manageruser.isLoadingCreate === true) {
+      this.setState({
+        isDisableButton: true
+      });
+    } else {
+      this.setState({
+        isDisableButton: false
+      });
+    }
+    if (nextProps.manageruser.usernew !== null) {
+      this.props.history.goBack();
+    }
+    if (nextProps.manageruser.errorcreate !== null) {
+      this.setState({
+        isErrorCreate: true,
+        errorMessage: "Tạo tài khoản nhân viên thất bại!"
+      });
+    } else {
+      this.setState({
+        isErrorCreate: false,
+        errorMessage: ""
+      });
+    }
+  }
+  _checkValidateEnableButton() {
+    const {
+      isFullnameError,
+      isEmailError,
+      isPassportError,
+      isPhoneError,
+      isPasswordError,
+      isUsernameError
+    } = this.state;
+    if (
+      isFullnameError === false &&
+      isEmailError === false &&
+      isPassportError === false &&
+      isPhoneError === false &&
+      isPasswordError === false &&
+      this.state.dateofbirth !== null &&
+      this.state.gender !== null
+    ) {
+      this.setState({
+        isDisableButton: false
+      });
+    } else {
+      this.setState({
+        isDisableButton: true
+      });
+    }
   }
   render() {
+    console.log("====================================");
+    console.log(this.state);
+    console.log("====================================");
     return (
       <section className="content">
         <div className="wraper container-fluid">
@@ -99,22 +176,23 @@ class ThemNV extends Component {
             <div className="col-sm-12">
               <div className="panel panel-default">
                 <div className="panel-body">
-                  <div className="row">
-                    <div className="col-md-1" />
-                    <div className="col-md-3">
-                      <Dropzone
-                        multiple={false}
-                        accept="image/*"
-                        disablePreview={false}
-                      >
-                        <p>Kéo ảnh vào đây hoặc bấm vào đây để chọn ảnh</p>
-                      </Dropzone>
-                    </div>
-                  </div>
+                  {this.state.isErrorCreate === true ? (
+                    <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss.bind(this)}>
+                      <h4>Xuất hiện Lỗi</h4>
+                      <p>
+                        Xuất hiện lỗi trong quá trình thực hiện hành động tạo
+                        nhân viên. Có thể nhân viên này đã tồn tại trên hệ
+                        thống, hoặc thông tin nhân viên đã được sử dụng bởi nhân
+                        viên khác
+                      </p>
+                    </Alert>
+                  ) : (
+                    undefined
+                  )}
                   <div className=" form">
                     <form
                       className="cmxform form-horizontal tasi-form"
-                      onSubmit={this.handleSubmit}
+                      onSubmit={this.handleSubmit.bind(this)}
                     >
                       <FormGroup
                         controlId="formValidationNull"
@@ -216,7 +294,7 @@ class ThemNV extends Component {
                             bsClass="form-control"
                             type="text"
                             placeholder="Nhập username"
-                            onChange={this._inputUsername}
+                            onChange={this._inputUsername.bind(this)}
                           />
                         </div>
                       </FormGroup>
@@ -327,20 +405,28 @@ class ThemNV extends Component {
                             valueField="id"
                             textField="value"
                             defaultValue={2}
-                            onSelect={data => console.log("test data", data)}
+                            onSelect={data => this.setState({ role: data.id })}
                           />
                         </div>
                       </FormGroup>
 
                       <div className="form-group">
                         <div className="col-lg-offset-2 col-lg-10">
-                          <input
+                          <Button
                             type="submit"
-                            className=" btn btn-info col-md-4 col-sm-6 col-xs-12"
-                            id="save"
-                            name="save"
-                            defaultValue="Save"
-                          />
+                            disabled={this.state.isDisableButton}
+                            bsClass=" btn btn-info col-md-4 col-sm-6 col-xs-12"
+                          >
+                            {" "}
+                            Tạo nhân viên{" "}
+                          </Button>
+                          <Button
+                            type="reset"
+                            bsClass=" btn col-md-4 col-sm-6 col-xs-12"
+                          >
+                            {" "}
+                            Hủy bỏ{" "}
+                          </Button>
                         </div>
                       </div>
                     </form>
@@ -354,7 +440,7 @@ class ThemNV extends Component {
     );
   }
   _inputFullname(event) {
-    if (event.target.value.length > 3) {
+    if (event.target.value.toString().length > 3) {
       this.setState({
         fullname: event.target.value,
         isFullnameError: false
@@ -365,11 +451,9 @@ class ThemNV extends Component {
         fullname: ""
       });
     }
+    this._checkValidateEnableButton();
   }
   _inputEmail(event) {
-    console.log("=================event===================");
-    console.log(event);
-    console.log("====================================");
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (re.test(event.target.value) === true) {
       this.setState({
@@ -382,19 +466,7 @@ class ThemNV extends Component {
         isEmailError: true
       });
     }
-  }
-  _inputFullname(event) {
-    if (event.target.value.lenght >= 3) {
-      this.setState({
-        fullname: event.target.value,
-        isFullnameError: false
-      });
-    } else {
-      this.setState({
-        isFullnameError: true,
-        fullname: ""
-      });
-    }
+    this._checkValidateEnableButton();
   }
   _inputUsername(event) {
     if (event.target.value === "") {
@@ -408,6 +480,7 @@ class ThemNV extends Component {
         username: event.target.value
       });
     }
+    this._checkValidateEnableButton();
   }
   _inputPassport(event) {
     const chuan = /^[0-9-+]+$/;
@@ -422,6 +495,7 @@ class ThemNV extends Component {
         isPassportError: true
       });
     }
+    this._checkValidateEnableButton();
   }
   _inputPhone(event) {
     const chuan = /^[0-9-+]+$/;
@@ -436,14 +510,16 @@ class ThemNV extends Component {
         isPhoneError: true
       });
     }
+    this._checkValidateEnableButton();
   }
   _inputAddress(event) {
     this.setState({
       address: event.target.value
     });
+    this._checkValidateEnableButton();
   }
   _inputPassword(event) {
-    if (event.target.value >= 6) {
+    if (event.target.value.toString().length >= 6) {
       this.setState({
         password: event.target.value,
         isPasswordError: false
@@ -454,6 +530,7 @@ class ThemNV extends Component {
         isPasswordError: true
       });
     }
+    this._checkValidateEnableButton();
   }
 }
 export default connect(
@@ -461,7 +538,8 @@ export default connect(
     manageruser: state.manageruser
   }),
   {
-    postCreateUser
+    postCreateUser,
+    getListUserAction
   }
 )(ThemNV);
 

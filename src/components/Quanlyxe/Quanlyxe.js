@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-
+import { Button } from "react-bootstrap";
 import "../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import { connect } from "react-redux";
 import { getListXe } from "./action";
@@ -12,38 +12,41 @@ class Quanlyxe extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
-      idSelect: null
+      data: [],
+      idSelect: null,
+      isDisableChitiet: true
     };
     this.props.getListXe();
   }
   onRowSelect(row, isSelected, e) {
-    this.setState({
-      idSelect: null
-    });
-    countRow++;
-    if (isSelected === true && countRow === 1) {
-      this.setState({
-        idSelect: row._id
+    if (isSelected === true) {
+      this.state.data.forEach(xe => {
+        if (xe._id === row._id) {
+          this.setState({
+            dataSelect: xe,
+            isDisableChitiet: false
+          });
+          return;
+        }
       });
     }
-    if (isSelected && countRow > 1) {
-      alert("Chưa hỗ trợ chọn nhiều hàng!");
-      return false;
-    }
     if (isSelected === false) {
-      countRow = 0;
+      this.setState({
+        dataSelect: null,
+        isDisableChitiet: true
+      });
     }
   }
   _mapData(data) {
     const result = [];
     data.forEach(xe => {
       const newXe = {
-        createdAt: moment(data.createdAt).format("L, LT"),
+        createdAt: moment(data.createdAt).format("L"),
         numberplate: xe.numberplate,
         name: xe.name,
-        productiontime: moment(xe.productiontime).format("L, LT"),
-        seat: xe.seat
+        productiontime: moment(xe.productiontime).format("L"),
+        seat: xe.seat,
+        _id: xe._id
       };
       result.push(newXe);
     });
@@ -69,9 +72,9 @@ class Quanlyxe extends Component {
   }
   render() {
     const selectRowProp = {
-      mode: "checkbox",
+      mode: "radio",
       bgColor: "#4DD0E1", // you should give a bgcolor, otherwise, you can't regonize which row has been selected
-      hideSelectColumn: true, // enable hide selection column.
+      // hideSelectColumn: true, // enable hide selection column.
       clickToSelect: true, // you should enable clickToSelect, otherwise, you can't select column.
       onSelect: this.onRowSelect.bind(this)
     };
@@ -84,6 +87,35 @@ class Quanlyxe extends Component {
                 <span />
               </span>
             </h3>
+
+            <span className="tp_rht">
+              <Button
+                disabled={this.state.isDisableChitiet}
+                bsStyle="info"
+                onClick={() =>
+                  this.props.history.push({
+                    pathname: "/manager/coach/detail",
+                    // search: '?chuyen=' + this.state.rowSelect,
+                    state: { idChuyen: this.state.rowSelect }
+                  })
+                }
+              >
+                Chi tiết
+              </Button>&nbsp;
+            </span>
+            <span className="tp_rht">
+              <Button
+                bsStyle="warning"
+                onClick={() =>
+                  this.props.history.push({
+                    pathname: "/manager/coach/add"
+                    // search: '?chuyen=' + this.state.rowSelect,
+                  })
+                }
+              >
+                Thêm xe
+              </Button>&nbsp;
+            </span>
           </div>
           <div className="row">
             <div className="col-md-12">
@@ -117,7 +149,8 @@ class Quanlyxe extends Component {
                               search={true}
                               multiColumnSearch={true}
                               options={{
-                                noDataText: "Khong co du xe nao ca!",
+                                noDataText:
+                                  "Không có dữ liệu của bất kỳ xe nào",
                                 exportCSVText: "Trích xuất ra excel",
                                 csvFileName: "Danhsachnhanvien.csv"
                               }}
