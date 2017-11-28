@@ -5,7 +5,11 @@ import { Lichsugiaodich } from "./Lichsugiaodich";
 import { Login, LoginReducer } from "./Login";
 import { QuanLyAdmin } from "./ManagerAdmin";
 import { Profile } from "./Profile";
-import { Quanlykhachhang, QuanlykhachhangReducer } from "./QuanLyKhachHang";
+import {
+  Quanlykhachhang,
+  QuanlykhachhangReducer,
+  Chitietkhachhang
+} from "./QuanLyKhachHang";
 import {
   QuanLyNhanVien,
   QuanlyNhanVienReducer,
@@ -17,7 +21,12 @@ import {
   Chitietchuyenxe,
   QuanLyChuyenXeReducer
 } from "./Quanlychuyenxe";
-import { Quanlytuyen } from "./Quanlytuyenxe";
+import {
+  Quanlytuyen,
+  Chitiettuyen,
+  QuanlytuyenReducer,
+  ThemtuyenXe
+} from "./Quanlytuyenxe";
 import { Quanlyve } from "./Quanlyve";
 import { Quanlyxe, QuanlyxeReducer, Chitietxe, Themxe } from "./Quanlyxe";
 import { Report } from "./Reporting";
@@ -34,6 +43,7 @@ export {
   Profile,
   Quanlykhachhang,
   QuanlykhachhangReducer,
+  Chitietkhachhang,
   QuanLyNhanVien,
   QuanlyNhanVienReducer,
   TongQuan,
@@ -41,6 +51,9 @@ export {
   Chitietchuyenxe,
   QuanLyChuyenXeReducer,
   Quanlytuyen,
+  Chitiettuyen,
+  QuanlytuyenReducer,
+  ThemtuyenXe,
   Quanlyve,
   Quanlyxe,
   QuanlyxeReducer,

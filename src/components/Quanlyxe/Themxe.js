@@ -1,9 +1,98 @@
 import React, { Component } from "react";
+import { DropdownList, DateTimePicker, NumberPicker } from "react-widgets";
+import { connect } from "react-redux";
+import {
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  HelpBlock,
+  Button,
+  Alert
+} from "react-bootstrap";
+import {
+  getListPhuXePhanCong,
+  getListLaiXeChuaPhanCong
+} from "../QuanLyNhanVien/action";
+import { postCreateXe } from "./action";
 class ThemXe extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataPhuXe: [],
+      dataLaiXe: [],
+      isLoading: true,
+      tenxe: null,
+      isTenXeError: false,
+      bienkiemsoat: null,
+      isBienKiemSoatError: false,
+      namsanxuat: null,
+      sochongoi: null,
+      ngaymuaxe: null,
+      idLaiXe: null,
+      idPhuXe: null,
+      isChongoiError: false
+    };
+    this.props.getListLaiXeChuaPhanCong();
+    this.props.getListPhuXePhanCong();
+  }
+  _mapData(data, typeUser) {
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
+    const result = [];
+    data.forEach(user => {
+      const newuser = {
+        id: user._id,
+        name: user.info.fullname + " - " + user.username
+      };
+      result.push(newuser);
+    });
+    if (typeUser === "LAIXE") {
+      this.setState({
+        dataLaiXe: result
+      });
+    }
+    if (typeUser === "PHUXE") {
+      this.setState({
+        dataPhuXe: result
+      });
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.listaixe !== null) {
+      this._mapData(nextProps.listlaixe, "LAIXE");
+      this.setState({
+        isLoading: false
+      });
+    }
+    if (nextProps.listphuxe !== null) {
+      this._mapData(nextProps.listphuxe, "PHUXE");
+      this.setState({
+        isLoading: false
+      });
+    }
+  }
+  _handleSubmit(event) {
+    event.preventDefault();
+    // 'numberplate', 'seat', 'name', 'productiontime',"idlaixe","idphuxe"
+    const numberplate = this.state.bienkiemsoat,
+      seat = this.state.seat,
+      name = this.state.tenxe,
+      productiontime = this.state.namsanxuat,
+      idlaixe = this.state.idLaiXe,
+      idphuxe = this.state.idPhuXe;
+    const data = { numberplate, seat, name, productiontime, idlaixe, idphuxe };
+    if (
+      (this.state.isBienKiemSoatError === false,
+      this.state.isChongoiError === false,
+      this.state.namsanxuat !== null,
+      idlaixe !== null,
+      idphuxe !== null)
+    ) {
+      this.props.postCreateXe(data);
+    }
+  }
   render() {
-    console.log("============================================");
-    console.log(this.props);
-    console.log("============================================");
     return (
       <section className="content">
         <div className="wraper container-fluid">
@@ -13,7 +102,6 @@ class ThemXe extends Component {
               <button
                 onClick={() => this.props.history.goBack()}
                 data-toggle="tooltip"
-                title
                 className="btn btn-default"
                 data-original-title="Back"
               >
@@ -27,104 +115,182 @@ class ThemXe extends Component {
               <div className="panel panel-default">
                 <div className="panel-body">
                   <div className=" form">
-                    <form className="cmxform form-horizontal tasi-form">
-                      <div className="form-group ">
-                        <label
-                          htmlFor="lastname"
-                          className="control-label col-lg-2"
-                        >
+                    <form
+                      className="cmxform form-horizontal tasi-form"
+                      onSubmit={this._handleSubmit}
+                    >
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={
+                          this.state.isTenXeError === true ? "error" : null
+                        }
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
                           Tên xe
-                        </label>
+                        </ControlLabel>
                         <div className="col-lg-10">
-                          <input
+                          <FormControl
+                            bsClass="form-control"
                             type="text"
-                            className="form-control"
-                            placeholder="Tên xe"
-                            name="driver_name"
-                            id="driver_name"
+                            placeholder="Nhập tên xe"
+                            onChange={this._inputTenXe.bind(this)}
                           />
+                          {this.state.isTenXeError === true ? (
+                            <HelpBlock> Tên xe dài dài 1 tý </HelpBlock>
+                          ) : (
+                            undefined
+                          )}
+                          <FormControl.Feedback />
                         </div>
-                      </div>
-                      <div className="form-group ">
-                        <label
-                          htmlFor="lastname"
-                          className="control-label col-lg-2"
-                        >
+                      </FormGroup>
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={
+                          this.state.isBienKiemSoatError === true
+                            ? "error"
+                            : null
+                        }
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
                           Biển kiểm soát
-                        </label>
+                        </ControlLabel>
                         <div className="col-lg-10">
-                          <input
+                          <FormControl
+                            bsClass="form-control"
                             type="text"
-                            className="form-control"
-                            placeholder="Biển kiểm soát"
-                            name="driver_email"
-                            id="driver_email"
+                            placeholder="Nhập tên xe"
+                            onChange={this._inputBienKiemSOat.bind(this)}
                           />
+                          {this.state.isBienKiemSoatError === true ? (
+                            <HelpBlock> Biển dài dài 1 tý </HelpBlock>
+                          ) : (
+                            undefined
+                          )}
+                          <FormControl.Feedback />
                         </div>
-                      </div>
-                      <div className="form-group ">
-                        <label
-                          htmlFor="lastname"
-                          className="control-label col-lg-2"
-                        >
+                      </FormGroup>
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={null}
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
                           Năm sản xuất
-                        </label>
+                        </ControlLabel>
                         <div className="col-lg-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Năm sản xuất"
-                            name="driver_phone"
-                            id="driver_phone"
+                          <DateTimePicker
+                            time={false}
+                            onSelect={data =>
+                              this.setState({ namsanxuat: data })
+                            }
+                            defaultValue={new Date("01/01/2010")}
                           />
+                          <FormControl.Feedback />
                         </div>
-                      </div>
-                      <div className="form-group ">
-                        <label
-                          htmlFor="lastname"
-                          className="control-label col-lg-2"
-                        >
+                      </FormGroup>
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={
+                          this.state.isChongoiError === true ? "error" : "null"
+                        }
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
                           Số chỗ ngồi
-                        </label>
+                        </ControlLabel>
                         <div className="col-lg-10">
-                          <input
+                          <FormControl
+                            bsClass="form-control"
                             type="text"
-                            className="form-control"
-                            placeholder="Số chỗ ngồi"
-                            name="driver_cmt"
-                            id="driver_cmt"
+                            placeholder="Nhập tên xe"
+                            onChange={this._inputSoChoNgoi.bind(this)}
                           />
+                          {this.state.isChongoiError === true ? (
+                            <HelpBlock>Số và nhỏ nhất là 0</HelpBlock>
+                          ) : (
+                            undefined
+                          )}
+                          <FormControl.Feedback />
                         </div>
-                      </div>
-                      <div className="form-group ">
-                        <label
-                          htmlFor="lastname"
-                          className="control-label col-lg-2"
-                        >
+                      </FormGroup>
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={null}
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
                           Ngày mua
-                        </label>
+                        </ControlLabel>
                         <div className="col-lg-10">
-                          <input
-                            type="password"
-                            className="form-control"
-                            placeholder="Ngày mua"
-                            name="driver_password"
-                            id="driver_password"
+                          <DateTimePicker
+                            time={false}
+                            onSelect={data =>
+                              this.setState({ ngaymuaxe: data })
+                            }
                           />
+                          <FormControl.Feedback />
                         </div>
-                      </div>
+                      </FormGroup>
 
-                      <div className="form-group">
-                        <div className="col-lg-offset-2 col-lg-10">
-                          <input
-                            type="submit"
-                            className=" btn btn-info col-md-4 col-sm-6 col-xs-12"
-                            id="save"
-                            name="save"
-                            defaultValue="Save"
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={null}
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
+                          Phân công cho lái xe
+                        </ControlLabel>
+                        <div className="col-lg-10">
+                          <DropdownList
+                            data={this.state.dataLaiXe}
+                            valueField={"id"}
+                            textField="name"
+                            onSelect={data =>
+                              this.setState({ idLaiXe: data.id })
+                            }
+                            filter
                           />
                         </div>
-                      </div>
+                      </FormGroup>
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={null}
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
+                          Phân công cho phụ xe
+                        </ControlLabel>
+                        <div className="col-lg-10">
+                          <DropdownList
+                            data={this.state.dataPhuXe}
+                            valueField={"id"}
+                            textField="name"
+                            onSelect={data =>
+                              this.setState({ idPhuXe: data.id })
+                            }
+                            filter
+                          />
+                          <FormControl.Feedback />
+                        </div>
+                      </FormGroup>
+                      <FormGroup
+                        controlId="formValidationNull"
+                        validationState={null}
+                        bsClass="form-group"
+                      >
+                        <ControlLabel bsClass="control-label col-lg-2">
+                          Phân công cho phụ xe
+                        </ControlLabel>
+                        <div className="col-lg-10">
+                          <Button bsStyle="info" type="submit">
+                            {" "}
+                            Thêm xe
+                          </Button>
+                          <FormControl.Feedback />
+                        </div>
+                      </FormGroup>
                     </form>
                   </div>
                 </div>
@@ -135,5 +301,58 @@ class ThemXe extends Component {
       </section>
     );
   }
+  _inputTenXe(event) {
+    if (event.target.value.toString().lenght > 3) {
+      this.setState({
+        tenxe: event.target.value.lenght,
+        isTenXeError: false
+      });
+    } else {
+      this.setState({
+        tenxe: null
+      });
+    }
+  }
+  _inputBienKiemSOat(event) {
+  
+      this.setState({
+        bienkiemsoat: event.target.value,
+        isBienKiemSoatError: false
+      });
+    
+    // } else {
+    //   this.setState({
+    //     bienkiemsoat: null,
+    //     isBienKiemSoatError: true
+    //   });
+    // }
+  }
+  _inputSoChoNgoi(event) {
+    const chuan = /^[0-9-+]+$/;
+
+    if (chuan.test(event.target.value)) {
+      if (parseInt(event.target.value) > 0) {
+        this.setState({
+          sochongoi: event.target.value.lenght,
+          isChongoiError: false
+        });
+      }
+    } else {
+      this.setState({
+        sochongoi: null,
+        isChongoiError: true
+      });
+    }
+  }
 }
-export default ThemXe;
+export default connect(
+  state => ({
+    listphuxe: state.manageruser.listphuxe,
+    listlaixe: state.manageruser.listlaixe
+  }),
+  {
+    getListLaiXeChuaPhanCong,
+    getListPhuXePhanCong,
+    postCreateXe
+  }
+)(ThemXe);

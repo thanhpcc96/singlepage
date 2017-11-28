@@ -7,8 +7,6 @@ import { Button } from "react-bootstrap";
 import ChitietNhanVienModal from "./ChiTietNhanVien";
 import { getListUserAction, deleteUser } from "./action";
 
-let countRow = 0;
-
 class QuanLyNhanVien extends Component {
   constructor(props) {
     super(props);

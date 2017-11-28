@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Table, ProgressBar, Well, Label } from "react-bootstrap";
+import { DropdownList } from "react-widgets";
 
 class Chitietxe extends Component {
   render() {

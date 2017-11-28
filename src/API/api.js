@@ -103,9 +103,33 @@ class userAPI {
       throw error;
     }
   }
+  async getListLaiXe(){
+    try {
+      const res= await axios.get(this.pathManagerUser+'laixe');
+      return res
+    } catch (err) {
+      throw err
+    }
+  }
+  async getListPhuXe(){
+    try {
+      const res= await axios.get(this.pathManagerUser+'phuxe');
+      return res
+    } catch (err) {
+      throw err
+    }
+  }
   async getListKhachHang() {
     try {
       const res = await axios.get(this.pathManagerClient + "all");
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getDetailKhachhang(id) {
+    try {
+      const res = await axios.get(this.pathManagerClient + id);
       return res;
     } catch (error) {
       throw error;
@@ -128,6 +152,31 @@ class userAPI {
       throw error
     }
   }
+  async postCreateXe(params){
+    try {
+      const res= await axios.post(this.pathManagerChuyenxe + "create",{...params});
+      return res
+    } catch (error) {
+      throw error
+    }
+  }
+  async getListTuyen() {
+    try {
+      const respone = await axios.get(this.pathManagerTuyenxe + "all");
+      return respone;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getListTuyenInfo(id) {
+    try {
+      const respone = await axios.get(this.pathManagerTuyenxe + "info/" + id);
+      return respone;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
 }
 
 export default new userAPI();

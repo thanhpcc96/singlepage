@@ -1,36 +1,34 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { connect } from "react-redux";
-
+import { Button } from "react-bootstrap";
 import { getListKhachHang } from "./action";
 
-let countRow = 0;
+//let countRow = 0;
 
 class QuanLyKhachHang extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: null,
+      rowSelect: null,
+      isDisableChitiet: true,
       idSelect: null
     };
     this.props.getListKhachHang();
+    this.onRowSelect = this.onRowSelect.bind(this);
   }
   onRowSelect(row, isSelected, e) {
-    this.setState({
-      idSelect: null
-    });
-    countRow++;
-    if (isSelected === true && countRow === 1) {
+    if (isSelected === true) {
       this.setState({
-        idSelect: row._id
+        rowSelect: row._id,
+        isDisableChitiet: false
       });
-    }
-    if (isSelected && countRow > 1) {
-      alert("Chưa hỗ trợ chọn nhiều hàng!");
-      return false;
-    }
-    if (isSelected === false) {
-      countRow = 0;
+    } else {
+      this.setState({
+        rowSelect: null,
+        isDisableChitiet: true
+      });
     }
   }
 
@@ -60,11 +58,11 @@ class QuanLyKhachHang extends Component {
   }
   render() {
     const selectRowProp = {
-      mode: "checkbox",
+      mode: "radio",
       bgColor: "#4DD0E1", // you should give a bgcolor, otherwise, you can't regonize which row has been selected
       hideSelectColumn: true, // enable hide selection column.
       clickToSelect: true, // you should enable clickToSelect, otherwise, you can't select column.
-      onSelect: this.onRowSelect.bind(this)
+      onSelect: this.onRowSelect
     };
     return (
       <section className="content">
@@ -73,6 +71,29 @@ class QuanLyKhachHang extends Component {
           <div className="page-title">
             {/* start page-title */}
             <h3 className="title">Quản lý khách hàng</h3>
+            <span className="tp_rht">
+              <Button
+                bsStyle="info"
+                onClick={
+                  () =>
+                    this.props.history.push({
+                      pathname: "/manager/client/chitiet",
+                      state: { idClient: this.state.rowSelect }
+                    })
+
+
+                  // this.props.history.push("/manager/client/chitiet")
+                }
+              >
+                Chi tiết
+              </Button>&nbsp;
+              {/*<Button
+                bsStyle="warning"
+                onClick={() => this.props.history.push("/manager/client/add")}
+              >
+                +
+              </Button>*/}
+            </span>
           </div>
           {/* end page-title */}
           <div className="row">

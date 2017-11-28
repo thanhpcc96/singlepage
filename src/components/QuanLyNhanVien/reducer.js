@@ -16,7 +16,13 @@ import {
   POST_UPDATE_USER_ERROR,
   POST_CREATE_USER,
   POST_CREATE_USER_ERROR,
-  POST_CREATE_USER_SUCCESS
+  POST_CREATE_USER_SUCCESS,
+  GET_LIST_LAIXE,
+  GET_LIST_LAIXE_ERROR,
+  GET_LIST_LAIXE_SUCCESS,
+  GET_LIST_PHUXE,
+  GET_LIST_PHUXE_ERROR,
+  GET_LIST_PHUXE_SUCCESS
 } from "./action";
 
 const initState = {
@@ -37,7 +43,10 @@ const initState = {
   updateerror: null,
   isLoadingCreate: false,
   usernew: null,
-  errorcreate: null
+  errorcreate: null,
+  listlaixe:null,
+  listphuxe: null,
+  errorget: null
 };
 
 export default function(state = initState, action) {
@@ -170,6 +179,42 @@ export default function(state = initState, action) {
         isLoadingCreate: false,
         usernew: null,
         errorcreate: action.error
+      };
+    case GET_LIST_LAIXE:
+      return {
+        ...state,
+        listlaixe: null,
+        errorget: null
+      };
+    case GET_LIST_LAIXE_SUCCESS:
+      return {
+        ...state,
+        listlaixe: action.listlaixe,
+        errorget: null
+      };
+    case GET_LIST_LAIXE_ERROR:
+      return {
+        ...state,
+        listlaixe: null,
+        errorget: action.error
+      };
+    case GET_LIST_PHUXE:
+      return {
+        ...state,
+        listphuxe: null,
+        errorget: null
+      };
+    case GET_LIST_PHUXE_SUCCESS:
+      return {
+        ...state,
+        listphuxe: action.listphuxe,
+        errorget: null
+      };
+    case GET_LIST_PHUXE_ERROR:
+      return {
+        ...state,
+        listphuxe: null,
+        errorget: action.error
       };
     default:
       return state;

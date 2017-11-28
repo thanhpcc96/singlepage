@@ -11,10 +11,13 @@ import {
   QuanLyAdmin,
   Profile,
   Quanlykhachhang,
+  Chitietkhachhang,
   QuanLyNhanVien,
   TongQuan,
   QuanLyChuyenXe,
   Quanlytuyen,
+  Chitiettuyen,
+  ThemtuyenXe,
   Quanlyve,
   Quanlyxe,
   Chitietxe,
@@ -78,6 +81,12 @@ const App = ({ location, isLogin }) => (
     />
     <UserRoute
       location={location}
+      path={baseURL + "/manager/client/chitiet"}
+      exact
+      component={Chitietkhachhang}
+    />
+    <UserRoute
+      location={location}
       path={baseURL + "/manager/transaction"}
       exact
       component={Lichsugiaodich}
@@ -94,6 +103,18 @@ const App = ({ location, isLogin }) => (
       path={baseURL + "/manager/tuyen"}
       exact
       component={Quanlytuyen}
+    />
+    <UserRoute
+      location={location}
+      path={baseURL + "/manager/tuyen/chitiettuyen"}
+      exact
+      component={Chitiettuyen}
+    />
+    <UserRoute
+      location={location}
+      path={baseURL + "/manager/tuyen/add"}
+      exact
+      component={ThemtuyenXe}
     />
     <UserRoute
       location={location}

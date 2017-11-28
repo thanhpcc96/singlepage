@@ -5,7 +5,8 @@ import {
   QuanlyNhanVienReducer,
   QuanlykhachhangReducer,
   QuanlyxeReducer,
-  QuanLyChuyenXeReducer
+  QuanLyChuyenXeReducer,
+  QuanlytuyenReducer
 } from "../components";
 
 export default combineReducers({
@@ -14,5 +15,6 @@ export default combineReducers({
   manageruser: QuanlyNhanVienReducer,
   managerclient: QuanlykhachhangReducer,
   managercoach: QuanlyxeReducer,
-  managerchuyen: QuanLyChuyenXeReducer
+  managerchuyen: QuanLyChuyenXeReducer,
+  managertuyen: QuanlytuyenReducer,
 });

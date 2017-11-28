@@ -41,6 +41,7 @@ class Quanlytuyenxe extends Component {
       });
 
       const tuyenmoi = {
+        _id: element._id,
         tentuyen: element.routeOfTrip.from + " " + element.routeOfTrip.to,
         diembatdau: element.routeOfTrip.from,
         diemcuoi: element.routeOfTrip.to,
@@ -90,7 +91,10 @@ class Quanlytuyenxe extends Component {
                 disabled={this.state.isDisableChitiet}
                 bsStyle="info"
                 onClick={() =>
-                  this.props.history.push("/manager/tuyen/chitiettuyen")
+                  this.props.history.push({
+                    pathname: "/manager/tuyen/chitiettuyen",
+                    state: { idTuyen: this.state.rowSelect }
+                  })
                 }
               >
                 Chi tiết

@@ -1,30 +1,25 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
-import { getListTuyenInfo } from "./action";
+import { getDetailKhachhang } from "./action";
 import { connect } from "react-redux";
 
-class Chitiettuyen extends Component {
+class Chitietkhachhang extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: null
     };
-    this.props.getListTuyenInfo(this.props.location.state.idTuyen);
+    this.props.getDetailKhachhang(this.props.location.state.idClient);
   }
-  _mapingData(tuyeninfo) {
-    let lotrinh = " ";
-    tuyeninfo.routeOfTrip.lotrinh.forEach(lt => {
-      lotrinh = lotrinh + lt;
-    });
-    const tuyen = {
-      _id: tuyeninfo._id,
-      ten: tuyeninfo.routeOfTrip.from + " " + tuyeninfo.routeOfTrip.to,
-      diembatdau: tuyeninfo.routeOfTrip.from,
-      diemcuoi: tuyeninfo.routeOfTrip.to,
-      lotrinh: lotrinh,
-      thoigianvanchuyen: tuyeninfo.thoigianvanchuyen,
-      vitriChotKT: tuyeninfo.vitriChotKT,
-      xetronglotrinh: tuyeninfo.xetronglotrinh.length
+  _mapingData(data) {
+    const khachhang = {
+      _id: data._id,
+      ten: data.info.fullname,
+      email: data.local.email,
+      password: data.local.password,
+      phone: data.phone,
+      sodu: data.acount_payment.balance,
+      trangthai: data.status
       //   phone: khachhang.phone,
       //   status: khachhang.status,
       //   email: khachhang.local.email,
@@ -37,22 +32,25 @@ class Chitiettuyen extends Component {
       // });
     };
     this.setState({
-      data: tuyen
+      data: khachhang
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.managertuyen.tuyeninfo !== null) {
-      this._mapingData(nextProps.managertuyen.tuyeninfo);
+    if (nextProps.managerclient.userdetail !== null) {
+      this._mapingData(nextProps.managerclient.userdetail);
     }
   }
   render() {
+    console.log("============================================");
+    console.log("========== tenlog               ===========", this.state);
+    console.log("============================================");
     return (
       <section className="content">
         <div className="wraper container-fluid">
           <div className="page-title">
             <h3 className="title">
-              Chi tiết tuyến xe<span style={{ color: "red", fontSize: 15 }}>
+              Chi tiết khách hàng<span style={{ color: "red", fontSize: 15 }}>
                 <span />
               </span>
             </h3>
@@ -98,13 +96,13 @@ class Chitiettuyen extends Component {
                             <Table bordered hover responsive>
                               <thead>
                                 <tr>
-                                  <th>Nội dung</th>
-                                  <th>Kết quả</th>
+                                  <th>Thông tin</th>
+                                  <th>Chi tiết</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr>
-                                  <td>Tên chuyến</td>
+                                  <td>Họ tên</td>
                                   <td>
                                     {this.state.data
                                       ? this.state.data.ten
@@ -112,50 +110,35 @@ class Chitiettuyen extends Component {
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td>Điểm bắt đầu</td>
+                                  <td>Email</td>
                                   <td>
                                     {this.state.data
-                                      ? this.state.data.diembatdau
+                                      ? this.state.data.email
                                       : "Vui lòng chọn khách hàng"}
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td>Điểm cuối</td>
+                                  <td>Số điện thoại</td>
                                   <td>
                                     {this.state.data
-                                      ? this.state.data.diemcuoi
+                                      ? this.state.data.phone
                                       : "Vui lòng chọn khách hàng"}
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td>Lộ trình</td>
+                                  <td>Số dư</td>
                                   <td>
                                     {this.state.data
-                                      ? this.state.data.lotrinh
+                                      ? this.state.data.sodu
                                       : "Vui lòng chọn khách hàng"}
                                   </td>
                                 </tr>
+
                                 <tr>
-                                  <td>Thời gian</td>
+                                  <td>Trạng thái</td>
                                   <td>
                                     {this.state.data
-                                      ? this.state.data.thoigianvanchuyen
-                                      : "Vui lòng chọn khách hàng"}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Vị trí trạm kiểm tra</td>
-                                  <td>
-                                    {this.state.data
-                                      ? this.state.data.vitriChotKT
-                                      : "Vui lòng chọn khách hàng"}
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>Xe trong tuyến</td>
-                                  <td>
-                                    {this.state.data
-                                      ? this.state.data.xetronglotrinh
+                                      ? this.state.data.trangthai
                                       : "Vui lòng chọn khách hàng"}
                                   </td>
                                 </tr>
@@ -178,9 +161,9 @@ class Chitiettuyen extends Component {
 }
 export default connect(
   state => ({
-    managertuyen: state.managertuyen
+    managerclient: state.managerclient
   }),
   {
-    getListTuyenInfo
+    getDetailKhachhang
   }
-)(Chitiettuyen);
+)(Chitietkhachhang);

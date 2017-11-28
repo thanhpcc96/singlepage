@@ -1,9 +1,11 @@
-import { GET_ALL_XE, GET_ALL_XE_ERROR, GET_ALL_XE_SUCCESS } from "./action";
+import { GET_ALL_XE, GET_ALL_XE_ERROR, GET_ALL_XE_SUCCESS, POST_CREATE_XE, POST_CREATE_XE_ERROR,POST_CREATE_XE_SUCCESS } from "./action";
 
 const initalState = {
   isLoading: false,
   listxe: null,
-  error: null
+  error: null,
+  xecreated: null,
+  errorcreated: null
 };
 export default function(state = initalState, action) {
   switch (action.type) {
@@ -27,6 +29,24 @@ export default function(state = initalState, action) {
         listxe: null,
         isLoading: false,
         error: action.error
+      };
+    case POST_CREATE_XE:
+      return {
+        ...state,
+        xecreated: null,
+        errorcreated: null
+      };
+    case POST_CREATE_XE_ERROR:
+      return {
+        ...state,
+        xecreated: null,
+        errorcreated: action.error
+      };
+    case POST_CREATE_XE_SUCCESS:
+      return {
+        ...state,
+        xecreated: action.xecreated,
+        errorcreated: null
       };
     default:
       return state;

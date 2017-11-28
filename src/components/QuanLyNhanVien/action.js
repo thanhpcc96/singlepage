@@ -1,4 +1,5 @@
 import userAPI from "../../API/api";
+import { GET_ALL_XE_ERROR } from "../Quanlyxe/action";
 
 export const GET_LIST_USER = "GET_LIST_USER";
 export const GET_LIST_USER_SUCCESSS = "GET_LIST_USER_SUCCESSS";
@@ -23,6 +24,14 @@ export const POST_DELETE_USER_ERROR = "POST_DELETE_USER_ERROR";
 export const POST_CREATE_USER = "POST_CREATE_USER";
 export const POST_CREATE_USER_SUCCESS = "POST_CREATE_USER_SUCCESS";
 export const POST_CREATE_USER_ERROR = "POST_CREATE_USER_ERROR";
+
+export const GET_LIST_LAIXE = "GET_LIST_LAIXE";
+export const GET_LIST_LAIXE_ERROR = "GET_LIST_LAIXE_ERROR";
+export const GET_LIST_LAIXE_SUCCESS = "GET_LIST_LAIXE_SUCCESS";
+
+export const GET_LIST_PHUXE = "GET_LIST_PHUXE";
+export const GET_LIST_PHUXE_ERROR = "GET_LIST_PHUXE_ERROR";
+export const GET_LIST_PHUXE_SUCCESS = "GET_LIST_PHUXE_SUCCESS";
 
 export function getListUserAction() {
   return async dispatch => {
@@ -60,7 +69,6 @@ export function getDetailUserAction(id) {
     }
   };
 }
-
 
 export function postUploadUserAction(formData) {
   console.log("====================formData================");
@@ -143,6 +151,45 @@ export function postCreateUser(params) {
     } catch (error) {
       return dispatch({
         type: POST_CREATE_USER_ERROR,
+        error
+      });
+    }
+  };
+}
+
+export function getListLaiXeChuaPhanCong() {
+  return async dispatch => {
+    dispatch({
+      type: GET_LIST_LAIXE
+    });
+    try {
+      const data = await userAPI.getListLaiXe();
+      return dispatch({
+        type: GET_LIST_LAIXE_SUCCESS,
+        listlaixe: data.data.result
+      });
+    } catch (error) {
+      return dispatch({
+        type: GET_LIST_LAIXE_ERROR,
+        error
+      });
+    }
+  };
+}
+export function getListPhuXePhanCong() {
+  return async dispatch => {
+    dispatch({
+      type: GET_LIST_PHUXE
+    });
+    try {
+      const data = await userAPI.getListPhuXe();
+      return dispatch({
+        type: GET_LIST_PHUXE_SUCCESS,
+        listphuxe: data.data.result
+      });
+    } catch (error) {
+      return dispatch({
+        type: GET_LIST_PHUXE_ERROR,
         error
       });
     }
